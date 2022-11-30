@@ -154,7 +154,7 @@
     <a class="consult" target="_blank">
         <div class="phone" style="display:none;">13823531229</div>
     </a>
-    <a class="cart" >
+    <a class="cart">
         <div class="pic"></div>
     </a>
     <a href="javascript:void(0)" class="btn_top" style="display: block;"></a>
@@ -171,6 +171,8 @@
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 <!--自己写的js-->
 <script src="js/main.min.js"></script>
+
+<script src="//code.bdstatic.com/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>
 <script type="text/javascript">
     //创建和初始化地图函数：
     function initMap() {
@@ -211,6 +213,13 @@
     // initMap();//创建和初始化地图
 </script>
 <script>
+    const {Query, User} = AV;
+    AV.init({
+        appId: "IThjCAxDBzGrZ4dsvDBfj9U8-MdYXbMMI",
+        appKey: "2P4CO1GjJnP9T8625skQ4QuW",
+        serverURL: "https://leancloud.local-trans.com"
+    });
+
     //   <!--验证用户名-->
     var uname = document.querySelector('.uname>input');
     var namePtxt = document.querySelector('.uname>span>b');
