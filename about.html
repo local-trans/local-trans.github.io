@@ -233,21 +233,16 @@
         _feedback.set("content", content);
         _feedback.set("IP", 'test ip');
         _feedback.save().then(function (value) {
-            console.log('Submit successful, ' + JSON.stringify(_feedback));
+            LA.track('func_feedback', {'result': 'success'});
+            console.log('Submit successfully, ' + JSON.stringify(value));
+            alert('Submit success!');
         }).catch(function (error) {
+            LA.track('func_feedback', {'result': error.message});
             console.log('Error: ' + error.message);
         });
     }
 </script>
 <script>
-    // const {Query, User} = AV;
-    // AV.init({
-    //     appId: "IThjCAxDBzGrZ4dsvDBfj9U8-MdYXbMMI",
-    //     appKey: "2P4CO1GjJnP9T8625skQ4QuW",
-    //     serverURL: "https://www.local-trans.com"
-    // });
-    // Bmob.initialize("ce4c38e158ea5d25", "147258");
-
     //   <!--验证用户名-->
     var uname = document.querySelector('.uname>input');
     var namePtxt = document.querySelector('.uname>span>b');
@@ -330,43 +325,8 @@
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
             alert("Oops! Can't commit with empty content.");
         } else {
-            // const query = Bmob.Query('Feedback');
-            // query.set("phone", $(phone).val().trim());
-            // query.set("email", $(uemil).val().trim());
-            // query.set("name", $(uname).val().trim());
-            // query.set("content", $('.suggestion').val().trim());
-            // query.set("IP", 'test ip');
-            // query.save().then(res => {
-            //     console.log(res)
-            // }).catch(err => {
-            //     console.log(err)
-            // });
-            // return true;
-
-            // LA.track('func_feedback', {
-            //     'name': $(phone).val().trim(),
-            //     'email': $(uemil).val().trim(),
-            //     'phone': $(phone).val().trim(),
-            //     'content': $('.suggestion').val().trim(),
-            //     'IP': 'test ip'
-            // });
-
-            addFeedback($(phone).val().trim(),$(phone).val().trim(),$(uemil).val().trim(),$('.suggestion').val().trim());
+            addFeedback($(uname).val().trim(), $(phone).val().trim(), $(uemil).val().trim(), $('.suggestion').val().trim());
             console.log('Submit success');
-
-            // var FeedbackObject = AV.Object.extend('Feedback');
-            // var feedback = new FeedbackObject();
-            // feedback.save({
-            //     phone: $(phone).val().trim(),
-            //     email: $(uemil).val().trim(),
-            //     name: $(uname).val().trim(),
-            //     content: $('.suggestion').val().trim(),
-            //     IP: 'test ip'
-            // }).then(function (object) {
-            //     console.log('保存成功。');
-            //     alert('Commit successfully! Thanks!');
-            // })
-            // location.href = 'index.html';
         }
     });
 </script>
