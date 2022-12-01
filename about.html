@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Local-trans Translation</title>
+    <title>Local-trans Translation | About</title>
     <link rel="shortcut icon" href="img/favicon.png" type="images/x-5b">
     <!--<title>Document</title> 关键字增加所搜性-->
     <meta name="description" content="">
@@ -165,18 +165,17 @@
 
 
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-<script src="js/jquery-1.11.1.js"></script>
-<script src="js/jquery-1.8.3.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 <!--自己写的js-->
 <script src="js/main.min.js"></script>
 
-<script src="//code.bdstatic.com/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>
 
 <!-- 51LA 统计分析 -->
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id: "JtVbUCXDkKhW8SaF",ck: "JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true})</script>
+<script>LA.init({id: "JtVbUCXDkKhW8SaF", ck: "JtVbUCXDkKhW8SaF", autoTrack: true, hashMode: true})</script>
 
 <script type="text/javascript">
     //创建和初始化地图函数：
@@ -218,7 +217,7 @@
     // initMap();//创建和初始化地图
 </script>
 <script>
-    const {Query, User} = AV;
+    // const {Query, User} = AV;
     AV.init({
         appId: "IThjCAxDBzGrZ4dsvDBfj9U8-MdYXbMMI",
         appKey: "2P4CO1GjJnP9T8625skQ4QuW",
@@ -305,14 +304,24 @@
     };
 
     var submit = document.querySelector('.about_form_submit');
-
     submit.onclick = function () {
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
             alert('请确认信息是否完好');
             return false;
         } else {
-            alert('提交成功');
-            location.href = 'index.html';
+            var FeedbackObject = AV.Object.extend('Feedback');
+            var feedback = new FeedbackObject();
+            feedback.save({
+                phone: 'test phone',
+                email: 'test email',
+                name: 'test name',
+                content: 'test content',
+                IP: 'test ip'
+            }).then(function (object) {
+                console.log('保存成功。');
+                alert('提交成功');
+            })
+            // location.href = 'index.html';
         }
     };
 
