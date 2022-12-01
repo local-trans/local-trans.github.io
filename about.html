@@ -122,7 +122,7 @@
                     <textarea style="resize:none" rows="7" cols="30" class="suggestion"></textarea>
                 </li>
                 <li>
-                    <p><input class="about_form_submit" type="submit" value="Submit"></p>
+                    <p><input class="about_form_submit" type="button" value="Submit"></p>
                 </li>
             </ul>
         </form>
@@ -165,13 +165,13 @@
 
 
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-<script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script src="js/jquery-1.11.1.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 
 <!--<script src="js/Bmob-2.4.0.min.js"></script>-->
 <!--自己写的js-->
-<script src="js/main.min.js"></script>
+<script src="js/main.js"></script>
 
 <!--<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>-->
 
@@ -305,11 +305,9 @@
         phoneBlur();
     };
 
-    var submit = document.querySelector('.about_form_submit');
-    submit.onclick = function () {
+    $('.about_form_submit').click(function () {
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
             alert("Oops! Can't commit with empty content.");
-            return false;
         } else {
             // const query = Bmob.Query('Feedback');
             // query.set("phone", $(phone).val().trim());
@@ -332,7 +330,6 @@
                 'IP': 'test ip'
             });
             console.log('Submit success');
-            return true;
 
             // var FeedbackObject = AV.Object.extend('Feedback');
             // var feedback = new FeedbackObject();
@@ -348,7 +345,7 @@
             // })
             // location.href = 'index.html';
         }
-    };
+    });
 </script>
 </body>
 </html>

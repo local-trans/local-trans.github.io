@@ -1,37 +1,4 @@
-//百度分享
-// window._bd_share_config = {
-//     "common": {
-//         "bdSnsKey": {},
-//         "bdText": "",
-//         "bdMini": "2",
-//         "bdMiniList": false,
-//         "bdPic": "",
-//         "bdStyle": "0",
-//         "bdSize": "16"
-//     }, "slide": {"type": "slide", "bdImg": "6", "bdPos": "left", "bdTop": "100"}
-// };
-// with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).
-//     src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
-////百度分享
-//window._bd_share_config = {
-//    "common": {
-//        "bdSnsKey": {},
-//        "bdText": "",
-//        "bdMini": "2",
-//        "bdMiniList": false,
-//        "bdPic": "",
-//        "bdStyle": "0",
-//        "bdSize": "16"
-//    },
-//    "share": {},
-//    "image": {
-//        "viewList": ["qzone", "tsina", "tqq", "renren", "weixin"],
-//        "viewText": "分享到：", "viewSize": "16"
-//    },
-//    "selectShare": {"bdContainerClass": null, "bdSelectMiniList": ["qzone", "tsina", "tqq", "renren", "weixin"]}
-//};
-//with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
-////baner轮播
+
 //首页产品展示的选项卡
 $(function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab.', function (e) {
@@ -120,7 +87,7 @@ $(".btn-default").click(function(){//按下事件.筛选.搜索功能
 /*---------返回顶部----------*/
 $(function() {
     $(".btn_top").hide();
-    $(".btn_top").live("click",function(){
+    $(".btn_top").on("click",function(){
         $('html, body').animate({scrollTop: 0},300);return false;
     })
     $(window).bind('scroll resize',function(){
