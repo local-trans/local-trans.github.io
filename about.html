@@ -168,6 +168,8 @@
 <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+
+<!--<script src="js/Bmob-2.4.0.min.js"></script>-->
 <!--自己写的js-->
 <script src="js/main.min.js"></script>
 
@@ -223,6 +225,7 @@
     //     appKey: "2P4CO1GjJnP9T8625skQ4QuW",
     //     serverURL: "https://www.local-trans.com"
     // });
+    // Bmob.initialize("ce4c38e158ea5d25", "147258");
 
     //   <!--验证用户名-->
     var uname = document.querySelector('.uname>input');
@@ -234,7 +237,7 @@
 
     //失去焦点 函数
     function unameBlur() {
-        if ($(uname).text().trim() !== '') {
+        if ($(uname).val().trim() !== '') {
             namePtxt.innerHTML = "√";
             namePtxt.style.color = '#6cbe1f';
             uname.style.border = 'solid 1px #6cbe1f';
@@ -308,6 +311,29 @@
             alert("Oops! Can't commit with empty content.");
             return false;
         } else {
+            // const query = Bmob.Query('Feedback');
+            // query.set("phone", $(phone).val().trim());
+            // query.set("email", $(uemil).val().trim());
+            // query.set("name", $(uname).val().trim());
+            // query.set("content", $('.suggestion').val().trim());
+            // query.set("IP", 'test ip');
+            // query.save().then(res => {
+            //     console.log(res)
+            // }).catch(err => {
+            //     console.log(err)
+            // });
+            // return true;
+
+            LA.track(func_feedback, {
+                'name': $(phone).val().trim(),
+                'email': $(uemil).val().trim(),
+                'phone': $(phone).val().trim(),
+                'content': $('.suggestion').val().trim(),
+                'IP': 'test ip'
+            });
+            console.log('Submit success');
+            return true;
+
             // var FeedbackObject = AV.Object.extend('Feedback');
             // var feedback = new FeedbackObject();
             // feedback.save({
@@ -323,8 +349,6 @@
             // location.href = 'index.html';
         }
     };
-
-
 </script>
 </body>
 </html>
