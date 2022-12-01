@@ -231,7 +231,7 @@
         _feedback.set("email", email);
         _feedback.set("phone", phone);
         _feedback.set("content", content);
-        _feedback.set("IP", ip);
+        _feedback.set("IP", 'test ip');
         _feedback.save().then(function (value) {
             console.log('Submit successful, ' + JSON.stringify(_feedback));
         }).catch(function (error) {
