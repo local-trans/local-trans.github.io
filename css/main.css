@@ -101,10 +101,10 @@ h1 {
     position: absolute;
     left: -124px;
     top: 65px;
-    width: 160px;
-    height: 160px;
-    background: url(../images/weixin.jpg);
-    background-repeat: no-repeat;
+    width: 124px;
+    height: 124px;
+    background: url(../img/wechat.png);
+    background-repeat: round;
 }
 
 #udesk-feedback-tab {

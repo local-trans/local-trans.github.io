@@ -160,7 +160,7 @@
     <a href="javascript:void(0)" class="btn_top" style="display: block;"></a>
 </div>
 <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=992669453&site=qq&menu=yes" id="udesk-feedback-tab"
-   class="udesk-feedback-tab-left" style="display: block; background-color: black;"></a>
+   class="udesk-feedback-tab-left" style="display: none; background-color: black;"></a>
 <!--qq聊天代码部分end-->
 
 
@@ -171,7 +171,7 @@
 <!--自己写的js-->
 <script src="js/main.min.js"></script>
 
-<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>
+<!--<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>-->
 
 <!-- 51LA 统计分析 -->
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
@@ -218,11 +218,11 @@
 </script>
 <script>
     // const {Query, User} = AV;
-    AV.init({
-        appId: "IThjCAxDBzGrZ4dsvDBfj9U8-MdYXbMMI",
-        appKey: "2P4CO1GjJnP9T8625skQ4QuW",
-        serverURL: "https://www.local-trans.com"
-    });
+    // AV.init({
+    //     appId: "IThjCAxDBzGrZ4dsvDBfj9U8-MdYXbMMI",
+    //     appKey: "2P4CO1GjJnP9T8625skQ4QuW",
+    //     serverURL: "https://www.local-trans.com"
+    // });
 
     //   <!--验证用户名-->
     var uname = document.querySelector('.uname>input');
@@ -308,18 +308,18 @@
             alert("Oops! Can't commit with empty content.");
             return false;
         } else {
-            var FeedbackObject = AV.Object.extend('Feedback');
-            var feedback = new FeedbackObject();
-            feedback.save({
-                phone: $(phone).val().trim(),
-                email: $(uemil).val().trim(),
-                name: $(uname).val().trim(),
-                content: $('.suggestion').val().trim(),
-                IP: 'test ip'
-            }).then(function (object) {
-                console.log('保存成功。');
-                alert('Commit successfully! Thanks!');
-            })
+            // var FeedbackObject = AV.Object.extend('Feedback');
+            // var feedback = new FeedbackObject();
+            // feedback.save({
+            //     phone: $(phone).val().trim(),
+            //     email: $(uemil).val().trim(),
+            //     name: $(uname).val().trim(),
+            //     content: $('.suggestion').val().trim(),
+            //     IP: 'test ip'
+            // }).then(function (object) {
+            //     console.log('保存成功。');
+            //     alert('Commit successfully! Thanks!');
+            // })
             // location.href = 'index.html';
         }
     };
