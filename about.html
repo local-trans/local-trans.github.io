@@ -33,7 +33,7 @@
             padding-left: 10px;
         }
     </style>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/api?key=&v=1.1&services=true"></script>
 </head>
 <body>
 <!--header头部-->
@@ -105,24 +105,24 @@
             <ul>
                 <li class="row">
                     <div class="col-md-6 uname">
-                        <span>您的姓名 : <b></b> </span>
+                        <span>Your Name:<b></b> </span>
                         <input type="text">
                     </div>
                     <div class="col-md-6 phone">
-                        <span>您的手机号 : <b></b> </span>
+                        <span>Your Mobile Number: <b></b> </span>
                         <input type="text">
                     </div>
                 </li>
                 <li class="uemil">
-                    <span>您的邮箱 : <b></b> </span>
+                    <span>Your Email: <b></b> </span>
                     <input type="text">
                 </li>
                 <li>
-                    <span>您的建议 :</span>
+                    <span>Your Suggestion:</span>
                     <textarea style="resize:none" rows="7" cols="30"></textarea>
                 </li>
                 <li>
-                    <p><input class="about_form_submit" type="submit"></p>
+                    <p><input class="about_form_submit" type="submit" value="Submit"></p>
                 </li>
             </ul>
         </form>
@@ -221,27 +221,26 @@
     AV.init({
         appId: "IThjCAxDBzGrZ4dsvDBfj9U8-MdYXbMMI",
         appKey: "2P4CO1GjJnP9T8625skQ4QuW",
-        serverURL: "https://leancloud.local-trans.com"
+        serverURL: "https://www.local-trans.com"
     });
 
     //   <!--验证用户名-->
     var uname = document.querySelector('.uname>input');
     var namePtxt = document.querySelector('.uname>span>b');
     uname.onfocus = function () {//获取焦点时
-        namePtxt.innerHTML = "请输入您的姓名";
+        namePtxt.innerHTML = "Please input your name!";
         namePtxt.style.color = 'red';
     };
 
     //失去焦点 函数
     function unameBlur() {
-        var reg = /^[\u4e00-\u9fa5]{2,18}$/;//\u4e00-\u9fa5 （汉字）  _(拼接)
-        if (reg.test(uname.value)) {
-            namePtxt.innerHTML = "对了";
+        if ($(uname).text().trim() !== '') {
+            namePtxt.innerHTML = "√";
             namePtxt.style.color = '#6cbe1f';
             uname.style.border = 'solid 1px #6cbe1f';
             return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
         } else {
-            namePtxt.innerHTML = "格式错误";
+            namePtxt.innerHTML = "Please input your name!";
             namePtxt.style.color = 'red';
             return false;//验证不通过返回 一个false  给最后点击提交时做准备
         }
@@ -254,20 +253,20 @@
     var uemil = document.querySelector('.uemil>input');
     var uemilPtxt = document.querySelector('.uemil>span>b');
     uemil.onfocus = function () {//获取焦点时
-        uemilPtxt.innerHTML = '请输入电子邮箱';
+        uemilPtxt.innerHTML = 'Please input your email!';
         uemilPtxt.style.color = 'red';
     };
 
     //    失去焦点 函数
     function uemilBlur() {
-        var reg = /^[0-9a-zA-Z]+@[0-9a-zA-Z]{2,4}\.(com||cn)$/;
+        var reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
         if (reg.test(uemil.value)) {
-            uemilPtxt.innerHTML = "可以";
+            uemilPtxt.innerHTML = "√";
             uemilPtxt.style.color = '#6cbe1f';
             uemil.style.border = 'solid 1px #6cbe1f';
             return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
         } else {
-            uemilPtxt.innerHTML = "请输入正确的电子邮箱格式";
+            uemilPtxt.innerHTML = "Invalid email!";
             uemilPtxt.style.color = 'red';
             return false;//验证不通过返回 一个false  给最后点击提交时做准备
         }
@@ -281,19 +280,19 @@
     var phone = document.querySelector('.phone>input');
     var phonePtxt = document.querySelector('.phone>span>b');
     phone.onfocus = function () {
-        phonePtxt.innerHTML = '请输入手机号码';
+        phonePtxt.innerHTML = 'Please input your mobile number!';
         phonePtxt.style.color = 'red';
     };
 
     function phoneBlur() {
-        var reg = /^1[3578][0-9]{9}$/;
+        var reg = /^[+]?\d+$/;
         if (reg.test(phone.value)) {
-            phonePtxt.innerHTML = "可以";
+            phonePtxt.innerHTML = "√";
             phonePtxt.style.color = '#6cbe1f';
             phone.style.border = 'solid 1px #6cbe1f';
             return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
         } else {
-            phonePtxt.innerHTML = "请输入正确的手机号码";
+            phonePtxt.innerHTML = "Invalid mobile number!";
             phonePtxt.style.color = 'red';
             return false;//验证不通过返回 一个false  给最后点击提交时做准备
         }
@@ -306,7 +305,7 @@
     var submit = document.querySelector('.about_form_submit');
     submit.onclick = function () {
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
-            alert('请确认信息是否完好');
+            alert("Oops! Can't commit with empty content.");
             return false;
         } else {
             var FeedbackObject = AV.Object.extend('Feedback');
@@ -319,7 +318,7 @@
                 IP: 'test ip'
             }).then(function (object) {
                 console.log('保存成功。');
-                alert('提交成功');
+                alert('Commit successfully! Thanks!');
             })
             // location.href = 'index.html';
         }
