@@ -174,6 +174,7 @@
 <script src="js/main.js"></script>
 
 <!--<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>-->
+<script src="js/parse-3.5.1.min.js"></script>
 
 <!-- 51LA 统计分析 -->
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
@@ -217,6 +218,26 @@
     }
 
     // initMap();//创建和初始化地图
+
+    // Initialize Parse
+    Parse.initialize("68Kq3ZeKkI4VYksbjpx9gqfHpNb3AFGRLR29bQPR", "n9RPmd3YQMzT9yo3vi67QbCUU6ceUuWo68gsargC");
+    Parse.serverURL = "https://parseapi.back4app.com/";
+
+    // Create a new User
+    async function addFeedback(name, phone, email, content) {
+        var Feedback = Parse.Object.extend("Feedback");
+        var _feedback = new Feedback();
+        _feedback.set("name", name);
+        _feedback.set("email", email);
+        _feedback.set("phone", phone);
+        _feedback.set("content", content);
+        _feedback.set("IP", ip);
+        _feedback.save().then(function (value) {
+            console.log('Submit successful, ' + JSON.stringify(_feedback));
+        }).catch(function (error) {
+            console.log('Error: ' + error.message);
+        });
+    }
 </script>
 <script>
     // const {Query, User} = AV;
@@ -322,13 +343,15 @@
             // });
             // return true;
 
-            LA.track('func_feedback', {
-                'name': $(phone).val().trim(),
-                'email': $(uemil).val().trim(),
-                'phone': $(phone).val().trim(),
-                'content': $('.suggestion').val().trim(),
-                'IP': 'test ip'
-            });
+            // LA.track('func_feedback', {
+            //     'name': $(phone).val().trim(),
+            //     'email': $(uemil).val().trim(),
+            //     'phone': $(phone).val().trim(),
+            //     'content': $('.suggestion').val().trim(),
+            //     'IP': 'test ip'
+            // });
+
+            addFeedback($(phone).val().trim(),$(phone).val().trim(),$(uemil).val().trim(),$('.suggestion').val().trim());
             console.log('Submit success');
 
             // var FeedbackObject = AV.Object.extend('Feedback');
