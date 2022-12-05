@@ -5,9 +5,13 @@
     <title>Local-trans Translation | About</title>
     <link rel="shortcut icon" href="img/favicon.png" type="images/x-5b">
     <!--<title>Document</title> 关键字增加所搜性-->
-    <meta name="description" content="">
+    <meta name="description" content="Local-trans, as a professional language service brand, is committed to providing
+                    high-quality translation, interpretation, desktop publishing, software localization, multimedia
+                    translation, AI data annotation and other language related services for enterprises and individuals
+                    in the fields of medicine and medical treatment, manufacturing, finance (digital currency), film and
+                    television, law, software, games and other fields.">
     <!--移动端<meta name="keywords" content="">-->
-    <meta name="keywords" content="公司介绍,发展历程,企业文化,翻译,中英翻译,translation,language">
+    <meta name="keywords" content="Local-trans,interpretation,localization,translation,language">
     <!--<meta name="keywords" content="">content="123"给网站关键字增加所搜性-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--做移动端一定要加他.支持手机端的neta标签<meta name="viewport" content="width=device-width, initial-scale=1">-->
@@ -61,7 +65,7 @@
                     <!--                    <li><a href="profuile.html">公司介绍</a></li>-->
                     <!--                    <li><a href="products.html">产品展示</a></li>-->
                     <!--                    <li><a href="news.html">新闻动态</a></li>-->
-                    <!--                    <li><a href="join.html">品牌招商</a></li>-->
+                    <li><a href="join.html">Join Us</a></li>
                     <li><a class="active" href="about.html">Contact Us</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -227,15 +231,17 @@
         _feedback.set("email", email);
         _feedback.set("phone", phone);
         _feedback.set("content", content);
-        _feedback.set("IP", 'test ip');
-        _feedback.save().then(function (res) {
+        _feedback.set("IP", globalInfo.ip);
+        _feedback.set("ext", JSON.stringify(globalInfo));
+        _feedback.save().then(res => {
             LA.track('func_feedback', {'result': 'success'});
             console.log('Submit successfully, ' + JSON.stringify(res));
             alert('Submit success!');
-        }).catch(function (error) {
+            location.reload();
+        }).catch(err => {
             LA.track('func_feedback', {'result': error.message});
             console.log('Error: ' + error.message);
-        });
+        })
     }
 </script>
 <script>
@@ -322,7 +328,6 @@
             alert("Oops! Can't commit with empty content.");
         } else {
             addFeedback($(uname).val().trim(), $(phone).val().trim(), $(uemil).val().trim(), $('.suggestion').val().trim());
-            console.log('Submit success');
         }
     });
 </script>

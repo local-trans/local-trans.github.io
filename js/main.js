@@ -1,4 +1,4 @@
-
+var globalInfo = {};
 //首页产品展示的选项卡
 $(function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab.', function (e) {
@@ -8,6 +8,30 @@ $(function () {
         var previousTab = $(e.relatedTarget).text();
         $(".active-tab span").html(activeTab);
         $(".previous-tab span").html(previousTab);
+    });
+
+    /*---------返回顶部----------*/
+    $(".btn_top").hide();
+    $(".btn_top").on("click", function () {
+        $('html, body').animate({scrollTop: 0}, 300);
+        return false;
+    })
+    $(window).bind('scroll resize', function () {
+        if ($(window).scrollTop() <= 300) {
+            $(".btn_top").hide();
+        } else {
+            $(".btn_top").show();
+        }
+    })
+    /*---------返回顶部 end----------*/
+
+    // 通过IP获取国家码  http://ip-api.com/json   、  http://geolocation-db.com/json/
+    // {"status":"success","country":"Hong Kong","countryCode":"HK","region":"HCW","regionName":"Central and Western District","city":"Hong Kong","zip":"","lat":22.3193,"lon":114.1693,"timezone":"Asia/Hong_Kong","isp":"xTom Hong Kong Limited","org":"Xtom HKG","as":"AS9312 xTom","query":"103.192.225.78"}
+    $.ajax({
+        url: "http://ip-api.com/json", success: function (result) {
+            globalInfo.countryCode = result.countryCode;
+            globalInfo.ip = result.query;
+        }
     });
 });
 //客服
@@ -80,24 +104,9 @@ $("#back-to-top").click(function () {
 //
 
 //筛选
-$(".btn-default").click(function(){//按下事件.筛选.搜索功能
-    var cont=$(".text1").val();
-    $(".col-md-4").hide().filter(":contains("+cont+")").show();//缩减:缩减其余的show
+$(".btn-default").click(function () {//按下事件.筛选.搜索功能
+    var cont = $(".text1").val();
+    $(".col-md-4").hide().filter(":contains(" + cont + ")").show();//缩减:缩减其余的show
 });
-/*---------返回顶部----------*/
-$(function() {
-    $(".btn_top").hide();
-    $(".btn_top").on("click",function(){
-        $('html, body').animate({scrollTop: 0},300);return false;
-    })
-    $(window).bind('scroll resize',function(){
-        if($(window).scrollTop()<=300){
-            $(".btn_top").hide();
-        }else{
-            $(".btn_top").show();
-        }
-    })
-})
 
-/*---------返回顶部 end----------*/
 
