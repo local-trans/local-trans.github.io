@@ -169,12 +169,11 @@
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 
-<!--<script src="js/Bmob-2.4.0.min.js"></script>-->
+<script src="js/Bmob-2.4.0.min.js"></script>
 <!--自己写的js-->
 <script src="js/main.js"></script>
 
 <!--<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>-->
-<script src="js/parse-3.5.1.min.js"></script>
 
 <!-- 51LA 统计分析 -->
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
@@ -219,22 +218,19 @@
 
     // initMap();//创建和初始化地图
 
-    // Initialize Parse
-    Parse.initialize("68Kq3ZeKkI4VYksbjpx9gqfHpNb3AFGRLR29bQPR", "n9RPmd3YQMzT9yo3vi67QbCUU6ceUuWo68gsargC");
-    Parse.serverURL = "https://parseapi.back4app.com/";
+    Bmob.initialize("ce4c38e158ea5d25", "147258");
 
     // Create a new User
     async function addFeedback(name, phone, email, content) {
-        var Feedback = Parse.Object.extend("Feedback");
-        var _feedback = new Feedback();
+        const _feedback = Bmob.Query("Feedback");
         _feedback.set("name", name);
         _feedback.set("email", email);
         _feedback.set("phone", phone);
         _feedback.set("content", content);
         _feedback.set("IP", 'test ip');
-        _feedback.save().then(function (value) {
+        _feedback.save().then(function (res) {
             LA.track('func_feedback', {'result': 'success'});
-            console.log('Submit successfully, ' + JSON.stringify(value));
+            console.log('Submit successfully, ' + JSON.stringify(res));
             alert('Submit success!');
         }).catch(function (error) {
             LA.track('func_feedback', {'result': error.message});
