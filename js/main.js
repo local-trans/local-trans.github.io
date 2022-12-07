@@ -1,7 +1,29 @@
 const debugMode = true;
 var globalInfo = {};
+
+// 支持多语言
+function loadProperties(lang) {
+    $('.slt_i18n').val(lang);
+    $.i18n.properties({
+        name: 'strings',  //资源文件名称 ， 命名格式： 文件名_国家代号.properties
+        path: 'i18n/',    //资源文件路径，注意这里路径是你属性文件的所在文件夹,可以自定义。
+        mode: 'map',     //用 Map 的方式使用资源文件中的值
+        language: lang,  //这就是国家代号 name+language刚好组成属性文件名：strings+zh -> strings_zh.properties
+        callback: function () {
+            $("[data-locale]").each(function () {
+                $(this).html($.i18n.prop($(this).data("locale")));
+            });
+        }
+    });
+}
+
 //首页产品展示的选项卡
 $(function () {
+    // 切换语言
+    $('.slt_i18n').change(function (e) {
+        loadProperties($(this).val());
+    });
+
     $('a[data-toggle="tab"]').on('shown.bs.tab.', function (e) {
         //获取已激活标签名称
         var activeTab = $(e.target).text();
@@ -37,6 +59,9 @@ $(function () {
             globalInfo.city = result.city;
             globalInfo.lat = result.lat;
             globalInfo.lon = result.lon;
+
+            // 多语言 // TODO Cookie 记录上次选择语言
+            loadProperties(globalInfo.countryCode === 'CN' ? 'zh' : 'en');
         }
     });
 });

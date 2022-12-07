@@ -60,13 +60,20 @@
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="index.html">Home</a></li>
+                <div style="float: right; padding: 15px 0;">
+                    <select class="slt_i18n">
+                        <option value="en">English</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </div>
+
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 100px;">
+                    <li><a href="index.html" data-locale="Home">Home</a></li>
                     <!--                    <li><a href="profuile.html">公司介绍</a></li>-->
                     <!--                    <li><a href="products.html">产品展示</a></li>-->
                     <!--                    <li><a href="news.html">新闻动态</a></li>-->
-                    <li><a href="join.html">Join Us</a></li>
-                    <li><a class="active" href="about.html">Contact Us</a></li>
+                    <li><a href="join.html" data-locale="Join_Us">Join Us</a></li>
+                    <li><a class="active" href="about.html" data-locale="Contact_Us">Contact Us</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -170,6 +177,7 @@
 
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 <script src="js/jquery-1.11.1.js"></script>
+<script src="js/jquery.i18n.properties.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
 <script src="js/Bmob-2.4.0.min.js"></script>
