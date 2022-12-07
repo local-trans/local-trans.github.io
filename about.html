@@ -73,7 +73,7 @@
     </nav>
 </header>
 <div class="fbwh banner_img">
-    <img src="http://0.rc.xiniu.com/g1/M00/AB/1A/CgAGS1jR_6eAOOEMAASIjbNqD3Y457.jpg" alt="">
+    <img src="img/home/poster2.png" alt="">
 </div>
 
 <div class="container about">
@@ -172,17 +172,11 @@
 <script src="js/jquery-1.11.1.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
-
 <script src="js/Bmob-2.4.0.min.js"></script>
-<!--自己写的js-->
-<script src="js/main.js"></script>
-
-<!--<script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.13.4/dist/av-min.js"></script>-->
-
 <!-- 51LA 统计分析 -->
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id: "JtVbUCXDkKhW8SaF", ck: "JtVbUCXDkKhW8SaF", autoTrack: true, hashMode: true})</script>
 
+<script src="js/main.js"></script>
 <script type="text/javascript">
     //创建和初始化地图函数：
     function initMap() {
@@ -221,28 +215,8 @@
     }
 
     // initMap();//创建和初始化地图
-
+    if (!debugMode) LA.init({id: "JtVbUCXDkKhW8SaF", ck: "JtVbUCXDkKhW8SaF", autoTrack: true, hashMode: true});
     Bmob.initialize("ce4c38e158ea5d25", "147258");
-
-    // Create a new User
-    async function addFeedback(name, phone, email, content) {
-        const _feedback = Bmob.Query("Feedback");
-        _feedback.set("name", name);
-        _feedback.set("email", email);
-        _feedback.set("phone", phone);
-        _feedback.set("content", content);
-        _feedback.set("IP", globalInfo.ip);
-        _feedback.set("ext", JSON.stringify(globalInfo));
-        _feedback.save().then(res => {
-            LA.track('func_feedback', {'result': 'success'});
-            console.log('Submit successfully, ' + JSON.stringify(res));
-            alert('Submit success!');
-            location.reload();
-        }).catch(err => {
-            LA.track('func_feedback', {'result': error.message});
-            console.log('Error: ' + error.message);
-        })
-    }
 </script>
 <script>
     //   <!--验证用户名-->
@@ -325,9 +299,24 @@
 
     $('.about_form_submit').click(function () {
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
-            alert("Oops! Can't commit with empty content.");
+            alert("Oops! Please input the information above.");
         } else {
-            addFeedback($(uname).val().trim(), $(phone).val().trim(), $(uemil).val().trim(), $('.suggestion').val().trim());
+            const _feedback = Bmob.Query("Feedback");
+            _feedback.set("name", $(uname).val().trim());
+            _feedback.set("email", $(uemil).val().trim());
+            _feedback.set("phone", $(phone).val().trim());
+            _feedback.set("content", $('.suggestion').val().trim());
+            _feedback.set("IP", globalInfo.ip);
+            _feedback.set("ext", JSON.stringify(globalInfo));
+            _feedback.save().then(res => {
+                trackEvent('func_feedback', {'result': 'success'});
+                console.log('Submit successfully, ' + JSON.stringify(res));
+                alert('Submit success! Thanks a lot for your kindly suggestion!');
+                location.reload();
+            }).catch(err => {
+                trackEvent('func_feedback', {'result': err.message});
+                console.log('Error: ' + err.message);
+            })
         }
     });
 </script>

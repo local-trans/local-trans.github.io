@@ -62,8 +62,7 @@
 </header>
 <div class="joinyemian">
     <div class="join-banner">
-        <div class="banner_img">
-            <img src="img/home/poster2.png" alt=""></div>
+        <div class="banner_img"><img src="img/home/poster2.png" alt=""></div>
         <ul class="join_sul" style="display:none;">
             <li><a href="#qiye">企业<br>介绍</a></li>
             <li><a href="#zhaoq">招商<br>优势</a></li>
@@ -75,29 +74,34 @@
     <div class="about_form">
         <div class="container">
             <form action="">
-                <h2>Suggestion</h2>
+                <h2>Translators Application</h2>
                 <div class="hrs"></div>
                 <ul>
                     <li class="row">
                         <div class="col-md-6 uname">
-                            <span>Your Name:<b></b> </span>
+                            <span>Company/Translator Name:<b></b> </span>
                             <input type="text">
                         </div>
                         <div class="col-md-6 phone">
-                            <span>Your Mobile Number: <b></b> </span>
+                            <span>Mobile Number: <b></b> </span>
                             <input type="text">
                         </div>
                     </li>
                     <li class="uemil">
-                        <span>Your Email: <b></b> </span>
+                        <span>Email: <b></b> </span>
                         <input type="text">
                     </li>
                     <li>
-                        <span>Your Suggestion:</span>
+                        <span>Comments:</span>
                         <textarea style="resize:none" rows="7" cols="30" class="suggestion"></textarea>
                     </li>
+                    <li class="resume">
+                        <span>Resume: <b></b> </span>
+                        <input type="file" id="resumeFile">
+                    </li>
                     <li>
-                        <p><input class="about_form_submit" type="button" value="Submit"></p>
+                        <p style="margin: 20px 0;"><input class="about_form_submit" type="button" value="Submit">
+                        </p>
                     </li>
                 </ul>
             </form>
@@ -140,40 +144,19 @@
    class="udesk-feedback-tab-left" style="display: none; background-color: black;"></a>
 <!--qq聊天代码部分end-->
 
-
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 <script src="js/jquery-1.11.1.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
-
 <script src="js/Bmob-2.4.0.min.js"></script>
-<!--自己写的js-->
+<!-- 51LA 统计分析 -->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+
 <script src="js/main.js"></script>
 <script>
     // initMap();//创建和初始化地图
 
     Bmob.initialize("ce4c38e158ea5d25", "147258");
-
-    // Create a new User
-    async function addFeedback(name, phone, email, content) {
-        const _feedback = Bmob.Query("Feedback");
-        _feedback.set("name", name);
-        _feedback.set("email", email);
-        _feedback.set("phone", phone);
-        _feedback.set("content", content);
-        _feedback.set("IP", globalInfo.ip);
-        _feedback.set("ext", JSON.stringify(globalInfo));
-        _feedback.save().then(res => {
-            LA.track('func_feedback', {'result': 'success'});
-            console.log('Submit successfully, ' + JSON.stringify(res));
-            alert('Submit success!');
-            location.reload();
-        }).catch(err => {
-            LA.track('func_feedback', {'result': error.message});
-            console.log('Error: ' + error.message);
-        })
-    }
-
     //   <!--验证用户名-->
     var uname = document.querySelector('.uname>input');
     var namePtxt = document.querySelector('.uname>span>b');
@@ -252,11 +235,42 @@
         phoneBlur();
     };
 
+    var resumeFile;
+    let bFile;
+    $('#resumeFile').change(function (e) {
+        resumeFile = e.currentTarget.files[0];
+        if (resumeFile === undefined) return;
+
+        console.log('--> ' + resumeFile.name);
+        bFile = Bmob.File(resumeFile.name, resumeFile);
+        bFile.save().then(function (obj) { // TODO 没有回调
+            console.log('O--> ' + JSON.stringify(obj));
+        }, function (error) {
+            console.log('E--> ' + JSON.stringify(error));
+        });
+    });
+
     $('.about_form_submit').click(function () {
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
-            alert("Oops! Can't commit with empty content.");
+            alert("Oops! Please input the information above.");
         } else {
-            addFeedback($(uname).val().trim(), $(phone).val().trim(), $(uemil).val().trim(), $('.suggestion').val().trim());
+            const _apply = Bmob.Query("Translator");
+            _apply.set("name", $(uname).val().trim());
+            _apply.set("email", $(uemil).val().trim());
+            _apply.set("phone", $(phone).val().trim());
+            _apply.set("comments", $('.suggestion').val().trim());
+            _apply.set("IP", globalInfo.ip);
+            _apply.set("ext", JSON.stringify(globalInfo));
+            if (resumeFile !== undefined) _apply.set("resume", Bmob.File(resumeFile.name, resumeFile));
+            _apply.save().then(res => {
+                trackEvent('func_feedback', {'result': 'success'});
+                console.log('Submit successfully, ' + JSON.stringify(res));
+                alert('Apply success!');
+                location.reload();
+            }).catch(err => {
+                trackEvent('func_feedback', {'result': err.message});
+                console.log('Error: ' + JSON.stringify(err));
+            })
         }
     });
 </script>

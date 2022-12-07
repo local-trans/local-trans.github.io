@@ -1,3 +1,4 @@
+const debugMode = true;
 var globalInfo = {};
 //首页产品展示的选项卡
 $(function () {
@@ -31,6 +32,11 @@ $(function () {
         url: "http://ip-api.com/json", success: function (result) {
             globalInfo.countryCode = result.countryCode;
             globalInfo.ip = result.query;
+            globalInfo.country = result.country;
+            globalInfo.region = result.region;
+            globalInfo.city = result.city;
+            globalInfo.lat = result.lat;
+            globalInfo.lon = result.lon;
         }
     });
 });
@@ -109,4 +115,9 @@ $(".btn-default").click(function () {//按下事件.筛选.搜索功能
     $(".col-md-4").hide().filter(":contains(" + cont + ")").show();//缩减:缩减其余的show
 });
 
+function trackEvent(eventName, params) {
+    if (!debugMode) {
+        LA.track(eventName, params);
+    }
+}
 
