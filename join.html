@@ -103,8 +103,10 @@
                         <textarea style="resize:none" rows="7" cols="30" class="suggestion"></textarea>
                     </li>
                     <li class="resume">
-                        <span>Resume: <b></b> </span>
-                        <input type="file" id="resumeFile">
+                        <!--                        <span>Resume: <b></b> </span>-->
+                        <!--                        <input type="file" id="resumeFile">-->
+                        <span style="font-weight: normal;">Note: You can send your resume to <a
+                                href="mailto:join@local-trans.com">join@local-trans.com</a>.</span>
                     </li>
                     <li>
                         <p style="margin: 20px 0;"><input class="about_form_submit" type="button" value="Submit">
@@ -243,20 +245,20 @@
         phoneBlur();
     };
 
-    var resumeFile;
-    let bFile;
-    $('#resumeFile').change(function (e) {
-        resumeFile = e.currentTarget.files[0];
-        if (resumeFile === undefined) return;
-
-        console.log('--> ' + resumeFile.name);
-        bFile = Bmob.File(resumeFile.name, resumeFile);
-        bFile.save().then(function (obj) { // TODO 没有回调
-            console.log('O--> ' + JSON.stringify(obj));
-        }, function (error) {
-            console.log('E--> ' + JSON.stringify(error));
-        });
-    });
+    // var resumeFile;
+    // let bFile;
+    // $('#resumeFile').change(function (e) {
+    //     resumeFile = e.currentTarget.files[0];
+    //     if (resumeFile === undefined) return;
+    //
+    //     console.log('--> ' + resumeFile.name);
+    //     bFile = Bmob.File(resumeFile.name, resumeFile);
+    //     bFile.save().then(function (obj) { // TODO 没有回调
+    //         console.log('O--> ' + JSON.stringify(obj));
+    //     }, function (error) {
+    //         console.log('E--> ' + JSON.stringify(error));
+    //     });
+    // });
 
     $('.about_form_submit').click(function () {
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
@@ -269,7 +271,7 @@
             _apply.set("comments", $('.suggestion').val().trim());
             _apply.set("IP", globalInfo.ip);
             _apply.set("ext", JSON.stringify(globalInfo));
-            if (resumeFile !== undefined) _apply.set("resume", Bmob.File(resumeFile.name, resumeFile));
+            // if (resumeFile !== undefined) _apply.set("resume", Bmob.File(resumeFile.name, resumeFile));
             _apply.save().then(res => {
                 trackEvent('func_feedback', {'result': 'success'});
                 console.log('Submit successfully, ' + JSON.stringify(res));
