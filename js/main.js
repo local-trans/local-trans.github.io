@@ -51,7 +51,7 @@ $(function () {
     // 通过IP获取国家码  http://ip-api.com/json (不支持https)  、  http://geolocation-db.com/json/
     // {"status":"success","country":"Hong Kong","countryCode":"HK","region":"HCW","regionName":"Central and Western District","city":"Hong Kong","zip":"","lat":22.3193,"lon":114.1693,"timezone":"Asia/Hong_Kong","isp":"xTom Hong Kong Limited","org":"Xtom HKG","as":"AS9312 xTom","query":"103.192.225.78"}
     $.ajax({
-        url: "https//geolocation-db.com/json/", success: function (result) {
+        url: "https://geolocation-db.com/json/", success: function (result) {
             globalInfo.countryCode = result.country_code;
             globalInfo.ip = result.IPv4;
             globalInfo.country = result.country_name;
