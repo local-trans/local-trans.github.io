@@ -269,8 +269,8 @@
             _apply.set("email", $(uemil).val().trim());
             _apply.set("phone", $(phone).val().trim());
             _apply.set("comments", $('.suggestion').val().trim());
-            _apply.set("IP", globalInfo.ip);
-            _apply.set("ext", JSON.stringify(globalInfo));
+            _apply.set("IP", globalInfo.ip ?? '');
+            _apply.set("ext", JSON.stringify(globalInfo ?? ''));
             // if (resumeFile !== undefined) _apply.set("resume", Bmob.File(resumeFile.name, resumeFile));
             _apply.save().then(res => {
                 trackEvent('func_feedback', {'result': 'success'});

@@ -314,8 +314,8 @@
             _feedback.set("email", $(uemil).val().trim());
             _feedback.set("phone", $(phone).val().trim());
             _feedback.set("content", $('.suggestion').val().trim());
-            _feedback.set("IP", globalInfo.ip);
-            _feedback.set("ext", JSON.stringify(globalInfo));
+            _feedback.set("IP", globalInfo.ip ?? '');
+            _feedback.set("ext", JSON.stringify(globalInfo ?? ''));
             _feedback.save().then(res => {
                 trackEvent('func_feedback', {'result': 'success'});
                 console.log('Submit successfully, ' + JSON.stringify(res));
