@@ -268,12 +268,12 @@
             _apply.set("ext", JSON.stringify(globalInfo ?? ''));
             // if (resumeFile !== undefined) _apply.set("resume", Bmob.File(resumeFile.name, resumeFile));
             _apply.save().then(res => {
-                trackEvent('func_feedback', {'result': 'success'});
+                trackEvent('func_apply', {'result': 'success'});
                 console.log('Submit successfully, ' + JSON.stringify(res));
                 alert('Apply success!');
                 location.reload();
             }).catch(err => {
-                trackEvent('func_feedback', {'result': err.message});
+                trackEvent('func_apply', {'result': err.message});
                 console.log('Error: ' + JSON.stringify(err));
             })
         }
