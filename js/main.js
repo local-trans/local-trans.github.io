@@ -73,6 +73,7 @@ $(function () {
             globalInfo.lon = result.longitude;
 
             if (cLocale === undefined) {
+                $.cookie('i18n_locale', globalInfo.countryCode === 'CN' ? 'zh' : 'en');
                 loadProperties(globalInfo.countryCode === 'CN' ? 'zh' : 'en');
             }
         }
