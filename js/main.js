@@ -13,6 +13,9 @@ function loadProperties(lang) {
             $("[data-locale]").each(function () {
                 $(this).html($.i18n.prop($(this).data("locale")));
             });
+            $("[data-locale-value]").each(function () {
+                $(this).attr('value', $.i18n.prop($(this).data("locale-value")));
+            });
         }
     });
 }
