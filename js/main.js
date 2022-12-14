@@ -22,6 +22,7 @@ $(function () {
     // 切换语言
     $('.slt_i18n').change(function (e) {
         loadProperties($(this).val());
+        $.cookie('i18n_locale', $(this).val());
     });
 
     $('a[data-toggle="tab"]').on('shown.bs.tab.', function (e) {
@@ -48,23 +49,29 @@ $(function () {
     })
     /*---------返回顶部 end----------*/
 
-    // 通过IP获取国家码  http://ip-api.com/json (不支持https)  、  http://geolocation-db.com/json/
-    // {"status":"success","country":"Hong Kong","countryCode":"HK","region":"HCW","regionName":"Central and Western District","city":"Hong Kong","zip":"","lat":22.3193,"lon":114.1693,"timezone":"Asia/Hong_Kong","isp":"xTom Hong Kong Limited","org":"Xtom HKG","as":"AS9312 xTom","query":"103.192.225.78"}
-    $.ajax({
-        url: "https://geolocation-db.com/json/", success: function (res) {
-            const result = JSON.parse(res);
-            globalInfo.countryCode = result.country_code;
-            globalInfo.ip = result.IPv4;
-            globalInfo.country = result.country_name;
-            globalInfo.region = result.state;
-            globalInfo.city = result.city;
-            globalInfo.lat = result.latitude;
-            globalInfo.lon = result.longitude;
+    // 语言
+    // #1 从cookie获取语言，为空则通过接口获取
+    const cLocale = $.cookie('i18n_locale');
+    if (cLocale === undefined) {
+        // 通过IP获取国家码  http://ip-api.com/json (不支持https)  、  http://geolocation-db.com/json/
+        // {"status":"success","country":"Hong Kong","countryCode":"HK","region":"HCW","regionName":"Central and Western District","city":"Hong Kong","zip":"","lat":22.3193,"lon":114.1693,"timezone":"Asia/Hong_Kong","isp":"xTom Hong Kong Limited","org":"Xtom HKG","as":"AS9312 xTom","query":"103.192.225.78"}
+        $.ajax({
+            url: "https://geolocation-db.com/json/", success: function (res) {
+                const result = JSON.parse(res);
+                globalInfo.countryCode = result.country_code;
+                globalInfo.ip = result.IPv4;
+                globalInfo.country = result.country_name;
+                globalInfo.region = result.state;
+                globalInfo.city = result.city;
+                globalInfo.lat = result.latitude;
+                globalInfo.lon = result.longitude;
 
-            // 多语言 // TODO Cookie 记录上次选择语言
-            loadProperties(globalInfo.countryCode === 'CN' ? 'zh' : 'en');
-        }
-    });
+                loadProperties(globalInfo.countryCode === 'CN' ? 'zh' : 'en');
+            }
+        });
+    } else {
+        loadProperties(cLocale);
+    }
 });
 //客服
 var flag = 1;
