@@ -154,9 +154,23 @@ $(".btn-default").click(function () {//按下事件.筛选.搜索功能
     $(".col-md-4").hide().filter(":contains(" + cont + ")").show();//缩减:缩减其余的show
 });
 
+function initAnalytics() {
+    try {
+        if (!debugMode) {
+            LA.init({id: "JtVbUCXDkKhW8SaF", ck: "JtVbUCXDkKhW8SaF", autoTrack: true, hashMode: true});
+        }
+    } catch (e) {
+        console.log(e.message);
+    }
+}
+
 function trackEvent(eventName, params) {
-    if (!debugMode) {
-        LA.track(eventName, params);
+    try {
+        if (!debugMode) {
+            LA.track(eventName, params);
+        }
+    } catch (e) {
+        console.log(e.message);
     }
 }
 
