@@ -1,4 +1,4 @@
-const debugMode = false;
+const debugMode = true;
 var globalInfo = {};
 
 // 支持多语言
