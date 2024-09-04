@@ -59,23 +59,28 @@ $(function () {
         loadProperties(cLocale);
     }
 
-    // 通过IP获取国家码  http://ip-api.com/json (不支持https)  、  http://geolocation-db.com/json/
+    // 通过IP获取国家码  http://ip-api.com/json (不支持https)  、  http://geolocation-db.com/json/、  https://api.country.is/
     // {"status":"success","country":"Hong Kong","countryCode":"HK","region":"HCW","regionName":"Central and Western District","city":"Hong Kong","zip":"","lat":22.3193,"lon":114.1693,"timezone":"Asia/Hong_Kong","isp":"xTom Hong Kong Limited","org":"Xtom HKG","as":"AS9312 xTom","query":"103.192.225.78"}
     $.ajax({
-        url: "https://geolocation-db.com/json/", success: function (res) {
+        url: "https://api.country.is/", success: function (res) {
             const result = JSON.parse(res);
-            globalInfo.countryCode = result.country_code;
-            globalInfo.ip = result.IPv4;
-            globalInfo.country = result.country_name;
-            globalInfo.region = result.state;
-            globalInfo.city = result.city;
-            globalInfo.lat = result.latitude;
-            globalInfo.lon = result.longitude;
+            // globalInfo.countryCode = result.country_code;
+            // globalInfo.ip = result.IPv4;
+            // globalInfo.country = result.country_name;
+            // globalInfo.region = result.state;
+            // globalInfo.city = result.city;
+            // globalInfo.lat = result.latitude;
+            // globalInfo.lon = result.longitude;
+            globalInfo.countryCode = result.country;
+            globalInfo.ip = result.ip;
 
             if (cLocale === undefined) {
                 $.cookie('i18n_locale', globalInfo.countryCode === 'CN' ? 'zh' : 'en');
                 loadProperties(globalInfo.countryCode === 'CN' ? 'zh' : 'en');
             }
+        }, error: function () {
+            $.cookie('i18n_locale', 'en');
+            loadProperties('en');
         }
     });
 });
