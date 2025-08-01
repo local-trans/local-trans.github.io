@@ -5,12 +5,12 @@
     <title>Local-trans Translation</title>
     <link rel="shortcut icon" href="img/favicon.png" type="images/x-5b">
     <!--<title>Document</title> 关键字增加所搜性-->
-    <meta name="description" content="长沙乔译翻译有限公司 - 专业提供医疗、制造业、金融、软件、多媒体等领域的高质量翻译、口译、本地化、桌面排版服务。10年行业经验，5000+成功案例，值得信赖的语言服务提供商。">
-    <meta name="keywords" content="长沙翻译公司,专业翻译服务,医疗翻译,制造业翻译,金融翻译,软件本地化,口译服务,桌面排版,多媒体翻译,乔译翻译,Local-trans">
-    <meta name="author" content="长沙乔译翻译有限公司">
+    <meta name="description" content="Local-trans Translation - Professional translation services for medical, manufacturing, financial, software, and multimedia industries. 10+ years experience, 5000+ successful projects, trusted language service provider.">
+    <meta name="keywords" content="professional translation services,medical translation,manufacturing translation,financial translation,software localization,interpretation services,desktop publishing,multimedia translation,Local-trans,Changsha translation company">
+    <meta name="author" content="Local-trans Translation Company">
     <meta name="robots" content="index,follow">
-    <meta property="og:title" content="长沙乔译翻译有限公司 - 专业翻译服务提供商">
-    <meta property="og:description" content="专业提供医疗、制造业、金融、软件等领域的高质量翻译、口译、本地化服务。10年行业经验，值得信赖。">
+    <meta property="og:title" content="Local-trans Translation - Professional Language Services Provider">
+    <meta property="og:description" content="Professional translation, interpretation, and localization services for medical, manufacturing, financial, and software industries. Trusted by 5000+ clients worldwide.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://local-trans.github.io">
     <meta property="og:image" content="https://local-trans.github.io/img/logo-name.png">
@@ -366,7 +366,8 @@
 <!-- Supabase JS -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <!-- 51LA 统计分析 -->
-<!-- <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script> -->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true})</script>
 
 <!-- Clicky 统计分析 -->
 <script async data-id="101463889" src="//static.getclicky.com/js"></script>
@@ -375,7 +376,14 @@
 <script src="js/main.js"></script>
 <script src="js/animations.js"></script>
 <script>
-    initAnalytics();
+    // 初始化统计分析
+    try {
+        if (typeof initAnalytics === 'function') {
+            initAnalytics();
+        }
+    } catch (error) {
+        console.warn('Analytics initialization failed:', error);
+    }
 </script>
 </body>
 </html>

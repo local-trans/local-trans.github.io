@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
     
-    <!-- 首页 -->
+    <!-- Homepage -->
     <url>
         <loc>https://local-trans.github.io/</loc>
         <lastmod>2024-01-15</lastmod>
@@ -12,7 +12,7 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://local-trans.github.io/?lang=en"/>
     </url>
     
-    <!-- 关于我们 -->
+    <!-- About Us -->
     <url>
         <loc>https://local-trans.github.io/about.html</loc>
         <lastmod>2024-01-15</lastmod>
@@ -22,7 +22,7 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://local-trans.github.io/about.html?lang=en"/>
     </url>
     
-    <!-- 加入我们 -->
+    <!-- Join Us -->
     <url>
         <loc>https://local-trans.github.io/join.html</loc>
         <lastmod>2024-01-15</lastmod>
@@ -32,7 +32,7 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://local-trans.github.io/join.html?lang=en"/>
     </url>
     
-    <!-- 产品服务 -->
+    <!-- Products & Services -->
     <url>
         <loc>https://local-trans.github.io/products.html</loc>
         <lastmod>2024-01-15</lastmod>
@@ -42,7 +42,7 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://local-trans.github.io/products.html?lang=en"/>
     </url>
     
-    <!-- 新闻动态 -->
+    <!-- News & Updates -->
     <url>
         <loc>https://local-trans.github.io/news.html</loc>
         <lastmod>2024-01-15</lastmod>
@@ -52,7 +52,7 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://local-trans.github.io/news.html?lang=en"/>
     </url>
     
-    <!-- 公司介绍 -->
+    <!-- Company Profile -->
     <url>
         <loc>https://local-trans.github.io/profuile.html</loc>
         <lastmod>2024-01-15</lastmod>

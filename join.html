@@ -153,15 +153,18 @@
 <script src="js/jquery.i18n.properties.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
-<script src="js/Bmob-2.4.0.min.js"></script>
+<!-- Supabase JS -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <!-- 51LA 统计分析 -->
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true})</script>
 
 <script src="js/main.js"></script>
 <script>
-    // initMap();//创建和初始化地图
-    initAnalytics();
-    Bmob.initialize("ce4c38e158ea5d25", "147258");
+    // 安全地初始化统计
+    if (typeof initAnalytics === 'function') {
+        initAnalytics();
+    }
     //   <!--验证用户名-->
     var uname = document.querySelector('.uname>input');
     var namePtxt = document.querySelector('.uname>span>b');
@@ -255,27 +258,54 @@
     //     });
     // });
 
-    $('.about_form_submit').click(function () {
+    $('.about_form_submit').click(async function () {
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
             alert("Oops! Please input the information above.");
         } else {
-            const _apply = Bmob.Query("Translator");
-            _apply.set("name", $(uname).val().trim());
-            _apply.set("email", $(uemil).val().trim());
-            _apply.set("phone", $(phone).val().trim());
-            _apply.set("comments", $('.suggestion').val().trim());
-            _apply.set("IP", globalInfo.ip ?? '');
-            _apply.set("ext", JSON.stringify(globalInfo ?? ''));
-            // if (resumeFile !== undefined) _apply.set("resume", Bmob.File(resumeFile.name, resumeFile));
-            _apply.save().then(res => {
-                trackEvent('func_apply', {'result': 'success'});
-                console.log('Submit successfully, ' + JSON.stringify(res));
-                alert('Apply success!');
-                location.reload();
-            }).catch(err => {
-                trackEvent('func_apply', {'result': err.message});
-                console.log('Error: ' + JSON.stringify(err));
-            })
+            try {
+                // 检查Supabase是否可用
+                if (!window.supabaseClient) {
+                    // 初始化Supabase客户端
+                    const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
+                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
+                    window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+                }
+
+                const applicationData = {
+                    name: $(uname).val().trim(),
+                    email: $(uemil).val().trim(),
+                    phone: $(phone).val().trim(),
+                    comments: $('.suggestion').val().trim(),
+                    ip: globalInfo.ip || '',
+                    ext: JSON.stringify(globalInfo || {}),
+                    created_at: new Date().toISOString()
+                };
+
+                const { data, error } = await window.supabaseClient
+                    .from('translator_applications')
+                    .insert([applicationData]);
+
+                if (error) {
+                    console.error('提交失败:', error);
+                    alert('提交失败，请稍后重试或直接联系我们：join@local-trans.com');
+                    if (typeof trackEvent === 'function') {
+                        trackEvent('func_apply', {'result': error.message});
+                    }
+                } else {
+                    console.log('Submit successfully, ' + JSON.stringify(data));
+                    alert('Apply success!');
+                    if (typeof trackEvent === 'function') {
+                        trackEvent('func_apply', {'result': 'success'});
+                    }
+                    location.reload();
+                }
+            } catch (err) {
+                console.error('网络错误:', err);
+                alert('网络错误，请检查网络连接后重试，或直接联系我们：join@local-trans.com');
+                if (typeof trackEvent === 'function') {
+                    trackEvent('func_apply', {'result': err.message});
+                }
+            }
         }
     });
 </script>

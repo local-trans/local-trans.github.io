@@ -198,9 +198,11 @@
 <script src="js/jquery.i18n.properties.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
-<script src="js/Bmob-2.4.0.min.js"></script>
+<!-- Supabase JS -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <!-- 51LA 统计分析 -->
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true})</script>
 
 <script src="js/main.js"></script>
 <script type="text/javascript">
@@ -240,9 +242,15 @@
         map.addControl(ctrl_sca);
     }
 
-    // initMap();//创建和初始化地图
-    initAnalytics();
-    Bmob.initialize("ce4c38e158ea5d25", "147258");
+    // 安全地初始化地图
+    if (document.getElementById('dituContent')) {
+        // initMap();//创建和初始化地图
+    }
+    
+    // 安全地初始化统计
+    if (typeof initAnalytics === 'function') {
+        initAnalytics();
+    }
 </script>
 <script>
     //   <!--验证用户名-->
@@ -323,26 +331,54 @@
         phoneBlur();
     };
 
-    $('.about_form_submit').click(function () {
+    $('.about_form_submit').click(async function () {
         if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
             alert("Oops! Please input the information above.");
         } else {
-            const _feedback = Bmob.Query("Feedback");
-            _feedback.set("name", $(uname).val().trim());
-            _feedback.set("email", $(uemil).val().trim());
-            _feedback.set("phone", $(phone).val().trim());
-            _feedback.set("content", $('.suggestion').val().trim());
-            _feedback.set("IP", globalInfo.ip ?? '');
-            _feedback.set("ext", JSON.stringify(globalInfo ?? ''));
-            _feedback.save().then(res => {
-                trackEvent('func_feedback', {'result': 'success'});
-                console.log('Submit successfully, ' + JSON.stringify(res));
-                alert('Submit success! Thanks a lot for your kindly suggestion!');
-                location.reload();
-            }).catch(err => {
-                trackEvent('func_feedback', {'result': err.message});
-                console.log('Error: ' + err.message);
-            })
+            try {
+                // 检查Supabase是否可用
+                if (!window.supabaseClient) {
+                    // 初始化Supabase客户端
+                    const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
+                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
+                    window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+                }
+
+                const feedbackData = {
+                    name: $(uname).val().trim(),
+                    email: $(uemil).val().trim(),
+                    phone: $(phone).val().trim(),
+                    content: $('.suggestion').val().trim(),
+                    ip: globalInfo.ip || '',
+                    ext: JSON.stringify(globalInfo || {}),
+                    created_at: new Date().toISOString()
+                };
+
+                const { data, error } = await window.supabaseClient
+                    .from('feedback')
+                    .insert([feedbackData]);
+
+                if (error) {
+                    console.error('提交失败:', error);
+                    alert('提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com');
+                    if (typeof trackEvent === 'function') {
+                        trackEvent('func_feedback', {'result': error.message});
+                    }
+                } else {
+                    console.log('Submit successfully, ' + JSON.stringify(data));
+                    alert('Submit success! Thanks a lot for your kindly suggestion!');
+                    if (typeof trackEvent === 'function') {
+                        trackEvent('func_feedback', {'result': 'success'});
+                    }
+                    location.reload();
+                }
+            } catch (err) {
+                console.error('网络错误:', err);
+                alert('网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com');
+                if (typeof trackEvent === 'function') {
+                    trackEvent('func_feedback', {'result': err.message});
+                }
+            }
         }
     });
 </script>

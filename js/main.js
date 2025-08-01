@@ -4,7 +4,17 @@ var globalInfo = {};
 // Supabase 配置
 const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// 初始化Supabase客户端
+let supabaseClient = null;
+function initSupabase() {
+    if (typeof supabase !== 'undefined' && supabase.createClient) {
+        supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        console.log('Supabase客户端初始化成功');
+    } else {
+        console.warn('Supabase库未加载，联系表单功能将不可用');
+    }
+}
 
 // 支持多语言
 function loadProperties(lang) {
@@ -27,6 +37,9 @@ function loadProperties(lang) {
 
 // 页面加载完成后执行
 $(document).ready(function () {
+    // 初始化Supabase
+    initSupabase();
+    
     // 初始化语言
     var lang = getUrlParam('lang') || $.cookie('lang') || 'zh';
     loadProperties(lang);
@@ -84,19 +97,25 @@ $(document).ready(function () {
 
 // 提交联系表单到Supabase
 async function submitContactForm(formData) {
+    var submitBtn = $('#contact-form button[type="submit"]');
+    var originalText = submitBtn.html();
+    
     try {
         // 显示加载状态
-        var submitBtn = $('#contact-form button[type="submit"]');
-        var originalText = submitBtn.html();
         submitBtn.html('<i class="fa fa-spinner fa-spin"></i> 提交中...').prop('disabled', true);
 
-        const { data, error } = await supabase
+        // 检查Supabase是否可用
+        if (!supabaseClient) {
+            throw new Error('Supabase客户端未初始化');
+        }
+
+        const { data, error } = await supabaseClient
             .from('contact_inquiries')
             .insert([formData]);
 
         if (error) {
             console.error('提交失败:', error);
-            alert('提交失败，请稍后重试或直接联系我们');
+            alert('提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com');
         } else {
             alert('提交成功！我们会尽快与您联系。');
             $('#contact-form')[0].reset();
@@ -112,10 +131,9 @@ async function submitContactForm(formData) {
         }
     } catch (err) {
         console.error('网络错误:', err);
-        alert('网络错误，请检查网络连接后重试');
+        alert('网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com');
     } finally {
         // 恢复按钮状态
-        var submitBtn = $('#contact-form button[type="submit"]');
         submitBtn.html(originalText).prop('disabled', false);
     }
 }
@@ -246,5 +264,5 @@ window.LocalTrans = {
     submitContactForm: submitContactForm,
     trackEvent: window.trackEvent,
     utils: utils,
-    supabase: supabase
+    supabase: supabaseClient
 };

@@ -1,24 +1,26 @@
 User-agent: *
 Allow: /
 
-# 主要页面
+# Main pages
 Allow: /index.html
 Allow: /about.html
 Allow: /join.html
 Allow: /products.html
 Allow: /news.html
 
-# 静态资源
+# Static resources
 Allow: /css/
 Allow: /js/
 Allow: /img/
 Allow: /i18n/
 
-# 不允许抓取的文件
+# Disallow crawling of these files
 Disallow: /*.DS_Store
+Disallow: /baidu_verify_code-7jWbn2Ak6S.html
+Disallow: /ByteDanceVerify.html
 
-# 站点地图
+# Sitemap
 Sitemap: https://local-trans.github.io/sitemap.xml
 
-# 爬虫延迟（可选）
+# Crawl delay (optional)
 Crawl-delay: 1
