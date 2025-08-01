@@ -1,386 +1,244 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>Local-trans Translation | About</title>
-    <link rel="shortcut icon" href="img/favicon.png" type="images/x-5b">
-    <!--<title>Document</title> 关键字增加所搜性-->
-    <meta name="description" content="Local-trans, as a professional language service brand, is committed to providing
-                    high-quality translation, interpretation, desktop publishing, software localization, multimedia
-                    translation, AI data annotation and other language related services for enterprises and individuals
-                    in the fields of medicine and medical treatment, manufacturing, finance (digital currency), film and
-                    television, law, software, games and other fields.">
-    <!--移动端<meta name="keywords" content="">-->
-    <meta name="keywords" content="Local-trans,interpretation,localization,translation,language">
-    <!--<meta name="keywords" content="">content="123"给网站关键字增加所搜性-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--做移动端一定要加他.支持手机端的neta标签<meta name="viewport" content="width=device-width, initial-scale=1">-->
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!--为了能更好的显示-->
-    <!--这是为了让网站优先兼容最高版本的ie浏览器 -->
-    <!-- CSS -->
-    <!--bootstrap的css-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-locale="about_title">关于我们 - 齐译翻译</title>
+    <meta name="description" data-locale="about_description" content="我们是一家专业的翻译服务提供商，致力于提供高质量的翻译服务。">
+    
+    <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="plug/bootstrap-3.2.0-dist/css/bootstrap.min.css">
-    <!--字体css-->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="plug/Font-Awesome-4.7.0/css/font-awesome.min.css">
-    <!--自己的css-->
-    <link rel="stylesheet" href="css/main.css">
-    <!--    百度地图-->
-    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
-    <style type="text/css">
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
-
-        .about li {
-            padding-left: 10px;
-        }
-    </style>
+    <!-- Main CSS -->
+    <link href="css/main.css" rel="stylesheet">
+    <!-- Language Switch CSS -->
+    <link href="css/language-switch.css" rel="stylesheet">
+    <!-- Modern Style CSS -->
+    <link href="css/modern-style.css" rel="stylesheet">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<!--header头部-->
-<header>
-    <nav class="navbar" role="navigation">
+    <!-- Header -->
+    <header>
         <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a style="display: block" class="logo" href="index.html">
-                    <img class="logo" src="img/logo-name.png" alt="">
-                    <h1 style="display: contents">乔译翻译</h1>
-                </a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <div style="float: right; padding: 15px 0;">
-                    <select class="slt_i18n">
-                        <option value="en">English</option>
-                        <option value="zh">中文</option>
-                    </select>
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-default">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="index.html">
+                                <img src="img/logo.png" alt="Local-trans" style="height: 40px;">
+                            </a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="navbar-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="index.html" data-locale="Home">首页</a></li>
+                                <li><a href="join.html" data-locale="Join_Us">加入我们</a></li>
+                                <li class="active"><a href="about.html" data-locale="Contact_Us">联系我们</a></li>
+                                <li class="language-switch">
+                                    <select class="slt_i18n">
+                                        <option value="zh">中文</option>
+                                        <option value="en">English</option>
+                                    </select>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
-
-                <ul class="nav navbar-nav navbar-right" style="margin-right: 100px;">
-                    <li><a href="index.html" data-locale="Home"></a></li>
-                    <!--                    <li><a href="profuile.html">公司介绍</a></li>-->
-                    <!--                    <li><a href="products.html">产品展示</a></li>-->
-                    <!--                    <li><a href="news.html">新闻动态</a></li>-->
-                    <li><a href="join.html" data-locale="Join_Us"></a></li>
-                    <li><a class="active" href="about.html" data-locale="Contact_Us"></a></li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
-</header>
-<div class="fbwh banner_img">
-    <img src="img/home/poster2.png" alt="">
-</div>
-
-<div class="container about">
-    <div class="row">
-        <div class="col-md-6">
-            <ul>
-                <li class="about_title">
-                    <h4 style="text-align: left">长沙乔译翻译有限公司</h4>
-                    <p>CHANGSHA LOCAL-TRANS TRANSLATION CO., LTD</p>
-                </li>
-                <li>
-                    <p data-locale="china_hunan"></p>
-                </li>
-                <li class="about_p">
-                    <img style="width: 20px;" src="img/about/icon_email.png">
-                    <p style="display: inline;">Email: <a target="_blank" href="mailto:joanne.wan@local-trans.com">joanne.wan@local-trans.com</a>
-                    </p>
-                </li>
-                <li class="about_p">
-                    <img style="width: 20px;" src="img/about/icon_facebook.png">
-                    <p style="display: inline;">Facebook: <a target="_blank"
-                                                             href="https://www.facebook.com/JoanneWan1229/">JoanneWan1229</a>
-                    </p>
-                </li>
-                <li class="about_p">
-                    <img style="width: 20px;" src="img/about/Linkedin.png">
-                    <p style="display: inline;">LinkedIn: <a target="_blank"
-                                                             href="https://www.linkedin.com/in/joanne-wan-680261220/">https://www.linkedin.com/in/joanne-wan-680261220/</a>
-                    </p>
-                </li>
-                <li class="about_p">
-                    <img style="width: 20px;" src="img/about/tel03.png">
-                    <p style="display: inline;">Tel: (+86)13823531229</p>
-                </li>
-                <li class="about_p">
-                    <img style="width: 20px;" src="img/about/QQ.png">
-                    <p style="display: inline;">QQ: 992669453</p>
-                </li>
-                <li class="about_p">
-                    <img style="width: 20px;" src="img/about/wechat.png">
-                    <p style="display: inline;">WeChat:</p>
-                    <img style="width: 120px;    display: block;    margin-left: 25px;" src="img/wechat.png">
-                </li>
-            </ul>
+            </div>
         </div>
-        <a href="" class="col-md-6">
-            <div id="dituContent"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header text-center">
+                <h1 class="page-title" data-locale="Contact_Us">联系我们</h1>
+                <p class="page-subtitle" data-locale="contact_subtitle">我们很乐意听到您的声音，请随时与我们联系</p>
+            </div>
+
+            <!-- Contact Info Section -->
+            <div class="contact-info-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fa fa-envelope"></i>
+                            </div>
+                            <h3 class="contact-title">邮箱联系</h3>
+                            <p class="contact-detail">joanne.wan@local-trans.com</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                            <h3 class="contact-title">电话咨询</h3>
+                            <p class="contact-detail">+86 138-0000-0000</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fa fa-map-marker"></i>
+                            </div>
+                            <h3 class="contact-title">公司地址</h3>
+                            <p class="contact-detail" data-locale="china_hunan">中国·湖南</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Form Section -->
+            <div class="form-section">
+                <div class="form-container">
+                    <div class="form-card">
+                        <div class="form-header">
+                            <h2 class="form-title" data-locale="Suggestion">意见反馈</h2>
+                            <p class="form-description" data-locale="feedback_description">您的宝贵意见是我们改进服务的动力</p>
+                        </div>
+                        
+                        <form id="feedbackForm" class="modern-form">
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="feedbackName" class="form-label" data-locale="Your_Name">您的姓名:</label>
+                                        <input type="text" id="feedbackName" name="name" class="form-control" required>
+                                        <span class="validation-message"></span>
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="feedbackMobile" class="form-label" data-locale="Your_Mobile_Number">您的手机号码:</label>
+                                        <input type="tel" id="feedbackMobile" name="mobile" class="form-control">
+                                        <span class="validation-message"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="feedbackEmail" class="form-label" data-locale="Your_Email">您的邮箱:</label>
+                                <input type="email" id="feedbackEmail" name="email" class="form-control">
+                                <span class="validation-message"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="feedbackSuggestion" class="form-label" data-locale="Your_Suggestion">您的建议:</label>
+                                <textarea id="feedbackSuggestion" name="suggestion" class="form-control" rows="6" required data-placeholder-zh="请输入您的宝贵建议或意见" data-placeholder-en="Please enter your valuable suggestions or feedback"></textarea>
+                                <span class="validation-message"></span>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn-submit" data-locale="Submit">
+                                    <span class="btn-text">提交反馈</span>
+                                    <span class="btn-loading" style="display: none;">
+                                        <i class="fa fa-spinner fa-spin"></i> 提交中...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Introduction Section -->
+            <div class="company-intro-section">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="section-title text-center">关于齐译翻译</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="intro-card">
+                            <h3 class="intro-title">我们的使命</h3>
+                            <p class="intro-text">致力于为全球客户提供专业、准确、高效的翻译服务，打破语言障碍，促进国际交流与合作。</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="intro-card">
+                            <h3 class="intro-title">我们的优势</h3>
+                            <p class="intro-text">拥有500+认证译员，覆盖100+语言，专业领域包括医疗、制造、金融、软件等多个行业。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="intro-card">
+                            <h3 class="intro-title">服务承诺</h3>
+                            <p class="intro-text">严格的质量控制体系，及时的交付保障，24/7客户服务支持，确保每一个项目的成功完成。</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="intro-card">
+                            <h3 class="intro-title">联系方式</h3>
+                            <p class="intro-text">随时欢迎您的咨询和合作洽谈，我们将为您提供最专业的语言解决方案。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p data-locale="footer_copyright">&copy; 2024 齐译翻译. 版权所有.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="izl-rmenu">
+        <a href="javascript:void(0)" class="btn_top" title="返回顶部">
+            <i class="fa fa-chevron-up" aria-hidden="true"></i>
         </a>
     </div>
-</div>
 
-<div class="about_form">
-    <div class="container">
-        <form action="">
-            <h2 data-locale="Suggestion"></h2>
-            <div class="hrs"></div>
-            <ul>
-                <li class="row">
-                    <div class="col-md-6 uname">
-                        <span data-locale="Your_Name"><b></b> </span>
-                        <input type="text">
-                    </div>
-                    <div class="col-md-6 phone">
-                        <span data-locale="Your_Mobile_Number"><b></b> </span>
-                        <input type="text">
-                    </div>
-                </li>
-                <li class="uemil">
-                    <span data-locale="Your_Email"><b></b> </span>
-                    <input type="text">
-                </li>
-                <li>
-                    <span data-locale="Your_Suggestion"></span>
-                    <textarea style="resize:none" rows="7" cols="30" class="suggestion"></textarea>
-                </li>
-                <li style="margin-top: 20px">
-                    <p><input class="about_form_submit" type="button" data-locale-value="Submit"></p>
-                </li>
-            </ul>
-        </form>
-    </div>
-</div>
-<footer>
-    <!--备案号-->
-    <div class="footer-button">
-        <div class="container">
-            <p>Tel: <a>(+86)13823531229</a> | Email: <a target="_blank" href="mailto:joanne.wan@local-trans.com">joanne.wan@local-trans.com</a>
-            </p>
-            <p>长沙乔译翻译有限公司</p>
-            <!--百度分享-->
-            <!--            <div class="bdsharebuttonbox" style="display:none;">-->
-            <!--                <a href="#" class="bds_more" data-cmd="more"></a>-->
-            <!--                <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>-->
-            <!--                <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a-->
-            <!--                    href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>-->
-            <!--                <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>-->
-            <!--                <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>-->
-            <!--            </div>-->
-        </div>
-    </div>
-</footer>
-<!--回到顶部-->
-<!--在线客服-->
-<!--qq聊天代码部分begin-->
-<div class="izl-rmenu">
-    <a href="javascript:void(0)" class="btn_top" style="display: block;"></a>
-</div>
-<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=992669453&site=qq&menu=yes" id="udesk-feedback-tab"
-   class="udesk-feedback-tab-left" style="display: none; background-color: black;"></a>
-<!--qq聊天代码部分end-->
+    <!-- Scripts -->
+    <script src="js/jquery-1.11.1.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+    <script src="js/jquery.i18n.properties.js"></script>
+    <script src="js/main.js"></script>
 
-
-<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-<script src="js/jquery-1.11.1.js"></script>
-<script src="js/jquery.cookie.min.js"></script>
-<script src="js/jquery.i18n.properties.js"></script>
-<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-<script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
-<!-- Supabase JS -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<!-- 51LA 统计分析 -->
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true})</script>
-
-<script src="js/main.js"></script>
-<script type="text/javascript">
-    //创建和初始化地图函数：
-    function initMap() {
-        createMap();//创建地图
-        setMapEvent();//设置地图事件
-        addMapControl();//向地图添加控件
-    }
-
-    //创建地图函数：
-    function createMap() {
-        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
-        var point = new BMap.Point(118.344858, 32.278066);//定义一个中心点坐标
-        map.centerAndZoom(point, 17);//设定地图的中心点和坐标并将地图显示在地图容器中
-        window.map = map;//将map变量存储在全局
-    }
-
-    //地图事件设置函数：
-    function setMapEvent() {
-        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
-        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
-        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
-        map.enableKeyboard();//启用键盘上下左右键移动地图
-    }
-
-    //地图控件添加函数：
-    function addMapControl() {
-        //向地图中添加缩放控件
-        var ctrl_nav = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_LARGE});
-        map.addControl(ctrl_nav);
-        //向地图中添加缩略图控件
-        var ctrl_ove = new BMap.OverviewMapControl({anchor: BMAP_ANCHOR_BOTTOM_RIGHT, isOpen: 1});
-        map.addControl(ctrl_ove);
-        //向地图中添加比例尺控件
-        var ctrl_sca = new BMap.ScaleControl({anchor: BMAP_ANCHOR_BOTTOM_LEFT});
-        map.addControl(ctrl_sca);
-    }
-
-    // 安全地初始化地图
-    if (document.getElementById('dituContent')) {
-        // initMap();//创建和初始化地图
-    }
-    
-    // 安全地初始化统计
-    if (typeof initAnalytics === 'function') {
-        initAnalytics();
-    }
-</script>
-<script>
-    //   <!--验证用户名-->
-    var uname = document.querySelector('.uname>input');
-    var namePtxt = document.querySelector('.uname>span>b');
-    uname.onfocus = function () {//获取焦点时
-        namePtxt.innerHTML = "Please input your name!";
-        namePtxt.style.color = 'red';
-    };
-
-    //失去焦点 函数
-    function unameBlur() {
-        if ($(uname).val().trim() !== '') {
-            namePtxt.innerHTML = "√";
-            namePtxt.style.color = '#6cbe1f';
-            uname.style.border = 'solid 1px #6cbe1f';
-            return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
-        } else {
-            namePtxt.innerHTML = "Please input your name!";
-            namePtxt.style.color = 'red';
-            return false;//验证不通过返回 一个false  给最后点击提交时做准备
-        }
-    }
-
-    uname.onblur = function () {//失去焦点时执行函数 键盘松开
-        unameBlur()
-    };
-    //    验证邮箱
-    var uemil = document.querySelector('.uemil>input');
-    var uemilPtxt = document.querySelector('.uemil>span>b');
-    uemil.onfocus = function () {//获取焦点时
-        uemilPtxt.innerHTML = 'Please input your email!';
-        uemilPtxt.style.color = 'red';
-    };
-
-    //    失去焦点 函数
-    function uemilBlur() {
-        var reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-        if (reg.test(uemil.value)) {
-            uemilPtxt.innerHTML = "√";
-            uemilPtxt.style.color = '#6cbe1f';
-            uemil.style.border = 'solid 1px #6cbe1f';
-            return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
-        } else {
-            uemilPtxt.innerHTML = "Invalid email!";
-            uemilPtxt.style.color = 'red';
-            return false;//验证不通过返回 一个false  给最后点击提交时做准备
-        }
-    }
-
-    uemil.onblur = function () {//失去焦点 时
-        uemilBlur();//调用
-    };
-
-    //验证手机号
-    var phone = document.querySelector('.phone>input');
-    var phonePtxt = document.querySelector('.phone>span>b');
-    phone.onfocus = function () {
-        phonePtxt.innerHTML = 'Please input your mobile number!';
-        phonePtxt.style.color = 'red';
-    };
-
-    function phoneBlur() {
-        var reg = /^[+]?\d+$/;
-        if (reg.test(phone.value)) {
-            phonePtxt.innerHTML = "√";
-            phonePtxt.style.color = '#6cbe1f';
-            phone.style.border = 'solid 1px #6cbe1f';
-            return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
-        } else {
-            phonePtxt.innerHTML = "Invalid mobile number!";
-            phonePtxt.style.color = 'red';
-            return false;//验证不通过返回 一个false  给最后点击提交时做准备
-        }
-    }
-
-    phone.onblur = function () {
-        phoneBlur();
-    };
-
-    $('.about_form_submit').click(async function () {
-        if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
-            alert("Oops! Please input the information above.");
-        } else {
-            try {
-                // 检查Supabase是否可用
-                if (!window.supabaseClient) {
-                    // 初始化Supabase客户端
-                    const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
-                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
-                    window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-                }
-
-                const feedbackData = {
-                    name: $(uname).val().trim(),
-                    email: $(uemil).val().trim(),
-                    phone: $(phone).val().trim(),
-                    content: $('.suggestion').val().trim(),
-                    ip: globalInfo.ip || '',
-                    ext: JSON.stringify(globalInfo || {}),
-                    created_at: new Date().toISOString()
-                };
-
-                const { data, error } = await window.supabaseClient
-                    .from('feedback')
-                    .insert([feedbackData]);
-
-                if (error) {
-                    console.error('提交失败:', error);
-                    alert('提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com');
-                    if (typeof trackEvent === 'function') {
-                        trackEvent('func_feedback', {'result': error.message});
+    <!-- 51LA统计分析 -->
+    <script>
+        // 51LA统计脚本加载和错误处理
+        (function() {
+            var script = document.createElement('script');
+            script.charset = 'UTF-8';
+            script.id = 'LA_COLLECT';
+            script.src = '//sdk.51.la/js-sdk-pro.min.js';
+            script.onerror = function() {
+                console.log('51LA统计脚本加载失败，使用本地统计');
+                // 可以在这里添加本地统计代码
+            };
+            script.onload = function() {
+                try {
+                    if (typeof LA !== 'undefined') {
+                        LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true});
                     }
-                } else {
-                    console.log('Submit successfully, ' + JSON.stringify(data));
-                    alert('Submit success! Thanks a lot for your kindly suggestion!');
-                    if (typeof trackEvent === 'function') {
-                        trackEvent('func_feedback', {'result': 'success'});
-                    }
-                    location.reload();
+                } catch (error) {
+                    console.log('51LA统计初始化失败:', error);
                 }
-            } catch (err) {
-                console.error('网络错误:', err);
-                alert('网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com');
-                if (typeof trackEvent === 'function') {
-                    trackEvent('func_feedback', {'result': err.message});
-                }
-            }
-        }
-    });
-</script>
+            };
+            document.head.appendChild(script);
+        })();
+    </script>
 </body>
 </html>

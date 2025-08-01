@@ -30,6 +30,8 @@
     <link rel="stylesheet" href="css/main.css">
     <!--现代化样式-->
     <link rel="stylesheet" href="css/modern-style.css">
+    <!--语言切换器样式-->
+    <link rel="stylesheet" href="css/language-switch.css">
 </head>
 <body>
 <!--header头部-->
@@ -142,12 +144,12 @@
 <div class="products">
     <h2 class="text-center"><a href="products.html" data-locale="Translation_Solutions"></a></h2>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#home" data-toggle="tab" data-locale="Medical_Industry"></a></li>
-        <li><a href="#yvgang" data-toggle="tab" data-locale="Manufacturing_Industry"></a></li>
-        <li><a href="#yvshi" data-toggle="tab" data-locale="Multimedia_Industry"></a></li>
-        <li><a href="#zuobian" data-toggle="tab" data-locale="Financial_Industry"></a></li>
-        <li><a href="#linyv" data-toggle="tab" data-locale="Software_Industry"></a></li>
-        <li><a href="#huajiu" data-toggle="tab" data-locale="Other_Industries"></a></li>
+        <li class="active"><a href="javascript:void(0)" data-toggle="tab" data-target="#home" data-locale="Medical_Industry"></a></li>
+        <li><a href="javascript:void(0)" data-toggle="tab" data-target="#yvgang" data-locale="Manufacturing_Industry"></a></li>
+        <li><a href="javascript:void(0)" data-toggle="tab" data-target="#yvshi" data-locale="Multimedia_Industry"></a></li>
+        <li><a href="javascript:void(0)" data-toggle="tab" data-target="#zuobian" data-locale="Financial_Industry"></a></li>
+        <li><a href="javascript:void(0)" data-toggle="tab" data-target="#linyv" data-locale="Software_Industry"></a></li>
+        <li><a href="javascript:void(0)" data-toggle="tab" data-target="#huajiu" data-locale="Other_Industries"></a></li>
     </ul>
     <div class="container">
         <div id="myTabContent" class="tab-content">
@@ -351,7 +353,9 @@
 <!--在线客服-->
 <!--qq聊天代码部分begin-->
 <div class="izl-rmenu">
-    <a href="javascript:void(0)" class="btn_top" style="display: block;"></a>
+    <a href="javascript:void(0)" class="btn_top" style="display: block;" title="返回顶部">
+        <i class="fa fa-chevron-up" aria-hidden="true"></i>
+    </a>
 </div>
 <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=992669453&site=qq&menu=yes" id="udesk-feedback-tab"
    class="udesk-feedback-tab-left" style="display: none; background-color: black;"></a>
@@ -366,8 +370,18 @@
 <!-- Supabase JS -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <!-- 51LA 统计分析 -->
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true})</script>
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js" onerror="console.warn('51LA统计脚本加载失败')"></script>
+<script>
+try {
+    if (typeof LA !== 'undefined') {
+        LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true});
+    } else {
+        console.warn('51LA统计服务不可用');
+    }
+} catch (error) {
+    console.warn('51LA统计初始化失败:', error);
+}
+</script>
 
 <!-- Clicky 统计分析 -->
 <script async data-id="101463889" src="//static.getclicky.com/js"></script>

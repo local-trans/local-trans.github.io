@@ -1,36 +1,373 @@
+// 全局变量
+let currentLanguage = 'zh';
+let supabaseClient = null;
+
+// 初始化语言设置
+function initializeLanguage() {
+    // 从localStorage获取保存的语言设置，默认为中文
+    currentLanguage = localStorage.getItem('language') || 'zh';
+    loadLanguage(currentLanguage);
+}
+
+// 加载语言文件
+function loadLanguage(language) {
+    $.i18n.properties({
+        name: 'strings',
+        path: 'i18n/',
+        mode: 'both',
+        language: language,
+        callback: function() {
+            try {
+                // 更新所有带有 data-locale 属性的元素
+                $('[data-locale]').each(function() {
+                    const key = $(this).attr('data-locale');
+                    const translation = getTranslation(key, $(this).text());
+                    $(this).text(translation);
+                });
+                
+                // 更新表单占位符
+                updatePlaceholders();
+                
+                // 更新语言选择器的值
+                $('.slt_i18n').val(language);
+                
+                console.log('Language loaded successfully:', language);
+            } catch (error) {
+                console.error('Error in language callback:', error);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Failed to load language file:', error);
+        }
+    });
+}
+
+// 安全获取翻译文本的函数
+function getTranslation(key, fallback) {
+    try {
+        const translation = $.i18n.prop(key);
+        return translation && translation !== key ? translation : (fallback || key);
+    } catch (error) {
+        console.warn('Translation error for key:', key, error);
+        return fallback || key;
+    }
+}
+
+// 更新表单占位符
+function updatePlaceholders() {
+    const placeholderKey = currentLanguage === 'zh' ? 'data-placeholder-zh' : 'data-placeholder-en';
+    $('[data-placeholder-zh], [data-placeholder-en]').each(function() {
+        const placeholder = $(this).attr(placeholderKey);
+        if (placeholder) {
+            $(this).attr('placeholder', placeholder);
+        }
+    });
+}
+
+// 切换语言
+function switchLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('language', lang);
+    loadLanguage(lang);
+}
+
+// 初始化Supabase
+function initializeSupabase() {
+    try {
+        const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
+        
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+            console.log('Supabase initialized successfully');
+        } else {
+            console.warn('Supabase library not loaded');
+        }
+    } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+    }
+}
+
+// 表单验证函数
+function validateForm(formData, formType) {
+    const errors = {};
+    
+    // 通用验证
+    if (!formData.name || formData.name.length < 2) {
+        errors.name = getTranslation('validation_name_required', '请输入有效的姓名');
+    }
+    
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        errors.email = getTranslation('validation_email_invalid', '请输入有效的邮箱地址');
+    }
+    
+    if (formData.mobile && !/^[\d\s\-\+\(\)]{10,}$/.test(formData.mobile)) {
+        errors.mobile = getTranslation('validation_mobile_invalid', '请输入有效的手机号码');
+    }
+    
+    // 特定表单验证
+    if (formType === 'contact') {
+        if (!formData.email) {
+            errors.email = getTranslation('validation_email_required', '请输入邮箱地址');
+        }
+        if (!formData.message || formData.message.length < 10) {
+            errors.message = getTranslation('validation_message_required', '请输入至少10个字符的详细需求');
+        }
+    }
+    
+    return errors;
+}
+
+// 显示表单验证错误
+function showFormErrors(errors) {
+    // 清除之前的错误
+    $('.validation-message').text('').hide();
+    $('.form-control').removeClass('error');
+    
+    // 显示新的错误
+    Object.keys(errors).forEach(field => {
+        const input = $(`#${field}, [name="${field}"]`).first();
+        const message = input.siblings('.validation-message');
+        
+        input.addClass('error');
+        message.text(errors[field]).show();
+    });
+}
+
+// 清除表单错误
+function clearFormErrors() {
+    $('.validation-message').text('').hide();
+    $('.form-control').removeClass('error success');
+}
+
+// 显示提交状态
+function showSubmitStatus(button, status, message) {
+    const originalText = button.data('original-text') || button.text();
+    button.data('original-text', originalText);
+    
+    button.removeClass('loading success error');
+    
+    switch (status) {
+        case 'loading':
+            button.addClass('loading').text(getTranslation('submitting', '提交中...'));
+            button.prop('disabled', true);
+            break;
+        case 'success':
+            button.addClass('success').text(message || getTranslation('submit_success', '提交成功'));
+            setTimeout(() => {
+                button.removeClass('success').text(originalText);
+                button.prop('disabled', false);
+            }, 3000);
+            break;
+        case 'error':
+            button.addClass('error').text(message || getTranslation('submit_error', '提交失败'));
+            setTimeout(() => {
+                button.removeClass('error').text(originalText);
+                button.prop('disabled', false);
+            }, 3000);
+            break;
+    }
+}
+
+// 联系表单提交
+async function submitContactForm(formData) {
+    const submitButton = $('#contactForm button[type="submit"]');
+    
+    try {
+        // 表单验证
+        const errors = validateForm(formData, 'contact');
+        if (Object.keys(errors).length > 0) {
+            showFormErrors(errors);
+            return;
+        }
+        
+        clearFormErrors();
+        showSubmitStatus(submitButton, 'loading');
+        
+        // 提交到Supabase
+        if (supabaseClient) {
+            const { data, error } = await supabaseClient
+                .from('contact_inquiries')
+                .insert([{
+                    name: formData.name,
+                    email: formData.email,
+                    mobile: formData.mobile,
+                    message: formData.message,
+                    created_at: new Date().toISOString()
+                }]);
+            
+            if (error) {
+                throw error;
+            }
+            
+            showSubmitStatus(submitButton, 'success', getTranslation('contact_submit_success', '咨询提交成功，我们会尽快联系您！'));
+            $('#contactForm')[0].reset();
+        } else {
+            throw new Error('Supabase not initialized');
+        }
+        
+    } catch (error) {
+        console.error('Contact form submission error:', error);
+        showSubmitStatus(submitButton, 'error', getTranslation('contact_submit_error', '提交失败，请稍后重试'));
+    }
+}
+
+// 翻译员申请表单提交
+async function submitTranslatorApplication(formData) {
+    const submitButton = $('#translatorForm button[type="submit"]');
+    
+    try {
+        // 表单验证
+        const errors = validateForm(formData, 'translator');
+        if (Object.keys(errors).length > 0) {
+            showFormErrors(errors);
+            return;
+        }
+        
+        clearFormErrors();
+        showSubmitStatus(submitButton, 'loading');
+        
+        // 提交到Supabase
+        if (supabaseClient) {
+            const { data, error } = await supabaseClient
+                .from('translator_applications')
+                .insert([{
+                    name: formData.name,
+                    mobile: formData.mobile,
+                    comments: formData.comments,
+                    created_at: new Date().toISOString()
+                }]);
+            
+            if (error) {
+                throw error;
+            }
+            
+            showSubmitStatus(submitButton, 'success', getTranslation('translator_submit_success', '申请提交成功，我们会尽快联系您！'));
+            $('#translatorForm')[0].reset();
+        } else {
+            throw new Error('Supabase not initialized');
+        }
+        
+    } catch (error) {
+        console.error('Translator application submission error:', error);
+        showSubmitStatus(submitButton, 'error', getTranslation('translator_submit_error', '提交失败，请稍后重试'));
+    }
+}
+
+// 反馈表单提交
+async function submitFeedback(formData) {
+    const submitButton = $('#feedbackForm button[type="submit"]');
+    
+    try {
+        // 表单验证
+        const errors = validateForm(formData, 'feedback');
+        if (Object.keys(errors).length > 0) {
+            showFormErrors(errors);
+            return;
+        }
+        
+        clearFormErrors();
+        showSubmitStatus(submitButton, 'loading');
+        
+        // 提交到Supabase
+        if (supabaseClient) {
+            const { data, error } = await supabaseClient
+                .from('feedback')
+                .insert([{
+                    name: formData.name,
+                    email: formData.email,
+                    message: formData.message,
+                    created_at: new Date().toISOString()
+                }]);
+            
+            if (error) {
+                throw error;
+            }
+            
+            showSubmitStatus(submitButton, 'success', getTranslation('feedback_submit_success', '反馈提交成功，感谢您的建议！'));
+            $('#feedbackForm')[0].reset();
+        } else {
+            throw new Error('Supabase not initialized');
+        }
+        
+    } catch (error) {
+        console.error('Feedback submission error:', error);
+        showSubmitStatus(submitButton, 'error', getTranslation('feedback_submit_error', '提交失败，请稍后重试'));
+    }
+}
+
+// 回到顶部功能
+function initBackToTop() {
+    const backToTopButton = $('.btn_top');
+    
+    // 监听滚动事件
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 300) {
+            backToTopButton.fadeIn();
+        } else {
+            backToTopButton.fadeOut();
+        }
+    });
+    
+    // 点击回到顶部
+    backToTopButton.click(function(e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: 0
+        }, 800);
+    });
+}
+
+// 统计事件跟踪
+function trackEvent(eventName, eventData = {}) {
+    try {
+        // 51LA统计
+        if (typeof LA !== 'undefined' && LA.track) {
+            LA.track(eventName, eventData);
+        }
+        
+        console.log('Event tracked:', eventName, eventData);
+    } catch (error) {
+        console.warn('Event tracking failed:', error);
+    }
+}
+
+// 文档就绪时初始化
 $(document).ready(function() {
-    // 初始化多语言
+    // 初始化语言
     initializeLanguage();
+    
+    // 初始化Supabase
+    initializeSupabase();
+    
+    // 初始化回到顶部功能
+    initBackToTop();
+    
+    // 语言切换选择框事件监听
+    $('.slt_i18n').change(function() {
+        const selectedLang = $(this).val();
+        switchLanguage(selectedLang);
+        trackEvent('language_switch', { language: selectedLang });
+    });
     
     // 联系表单提交处理
     $('#contactForm').submit(function(e) {
         e.preventDefault();
         
-        // 验证表单
-        if (!validateContactForm()) {
-            return;
-        }
-        
         const formData = {
-            name: $('#name').val().trim(),
-            email: $('#email').val().trim(),
-            phone: $('#phone').val().trim(),
-            company: $('#company').val().trim(),
-            message: $('#message').val().trim(),
-            language: getCurrentLanguage()
+            name: $('#contactName').val().trim(),
+            email: $('#contactEmail').val().trim(),
+            mobile: $('#contactMobile').val().trim(),
+            message: $('#message').val().trim()
         };
         
         submitContactForm(formData);
+        trackEvent('contact_form_submit');
     });
     
     // 翻译员申请表单提交处理
     $('#translatorForm').submit(function(e) {
         e.preventDefault();
-        
-        // 验证表单
-        if (!validateTranslatorForm()) {
-            return;
-        }
         
         const formData = {
             name: $('#translatorName').val().trim(),
@@ -39,373 +376,30 @@ $(document).ready(function() {
         };
         
         submitTranslatorApplication(formData);
+        trackEvent('translator_application_submit');
     });
     
     // 反馈表单提交处理
     $('#feedbackForm').submit(function(e) {
         e.preventDefault();
         
-        // 验证表单
-        if (!validateFeedbackForm()) {
-            return;
-        }
-        
         const formData = {
             name: $('#feedbackName').val().trim(),
-            mobile: $('#feedbackMobile').val().trim(),
             email: $('#feedbackEmail').val().trim(),
-            suggestion: $('#feedbackSuggestion').val().trim()
+            message: $('#feedbackMessage').val().trim()
         };
         
         submitFeedback(formData);
+        trackEvent('feedback_submit');
+    });
+    
+    // 表单输入时清除错误状态
+    $('.form-control').on('input blur', function() {
+        $(this).removeClass('error');
+        $(this).siblings('.validation-message').hide();
     });
 });
 
-// 多语言初始化
-function initializeLanguage() {
-    const savedLanguage = localStorage.getItem('language') || 'zh';
-    loadLanguage(savedLanguage);
-    updateLanguageDisplay(savedLanguage);
-}
-
-// 加载语言
-function loadLanguage(language) {
-    $.i18n.properties({
-        name: 'strings',
-        path: 'i18n/',
-        mode: 'map',
-        language: language,
-        callback: function () {
-            // 更新所有带有 data-locale 属性的元素
-            $('[data-locale]').each(function () {
-                var key = $(this).data('locale');
-                if ($.i18n.prop(key)) {
-                    $(this).text($.i18n.prop(key));
-                }
-            });
-            
-            // 更新placeholder
-            $('[data-placeholder-zh], [data-placeholder-en]').each(function() {
-                const placeholderKey = language === 'zh' ? 'data-placeholder-zh' : 'data-placeholder-en';
-                const placeholder = $(this).attr(placeholderKey);
-                if (placeholder) {
-                    $(this).attr('placeholder', placeholder);
-                }
-            });
-        }
-    });
-}
-
-// 切换语言
-function switchLanguage(language) {
-    localStorage.setItem('language', language);
-    loadLanguage(language);
-    updateLanguageDisplay(language);
-}
-
-// 更新语言显示
-function updateLanguageDisplay(language) {
-    const langText = language === 'zh' ? '中文' : 'English';
-    $('#currentLang').text(langText);
-}
-
-// 获取当前语言
-function getCurrentLanguage() {
-    return localStorage.getItem('language') || 'zh';
-}
-
-// 验证联系表单
-function validateContactForm() {
-    let isValid = true;
-    
-    // 验证姓名
-    const name = $('#name').val().trim();
-    if (!name) {
-        showValidationError('#name', $.i18n.prop('validation_required_field') || '此字段为必填项');
-        isValid = false;
-    } else {
-        clearValidationError('#name');
-    }
-    
-    // 验证邮箱
-    const email = $('#email').val().trim();
-    if (!email) {
-        showValidationError('#email', $.i18n.prop('validation_required_field') || '此字段为必填项');
-        isValid = false;
-    } else if (!isValidEmail(email)) {
-        showValidationError('#email', $.i18n.prop('validation_invalid_email') || '请输入有效的邮箱地址');
-        isValid = false;
-    } else {
-        clearValidationError('#email');
-    }
-    
-    // 验证翻译需求
-    const message = $('#message').val().trim();
-    if (!message) {
-        showValidationError('#message', $.i18n.prop('validation_fill_required') || '请填写翻译需求');
-        isValid = false;
-    } else {
-        clearValidationError('#message');
-    }
-    
-    return isValid;
-}
-
-// 验证翻译员申请表单
-function validateTranslatorForm() {
-    let isValid = true;
-    
-    // 验证姓名
-    const name = $('#translatorName').val().trim();
-    if (!name) {
-        showValidationError('#translatorName', $.i18n.prop('validation_required_field') || '此字段为必填项');
-        isValid = false;
-    } else {
-        clearValidationError('#translatorName');
-    }
-    
-    // 验证手机号
-    const mobile = $('#translatorMobile').val().trim();
-    if (!mobile) {
-        showValidationError('#translatorMobile', $.i18n.prop('validation_required_field') || '此字段为必填项');
-        isValid = false;
-    } else {
-        clearValidationError('#translatorMobile');
-    }
-    
-    return isValid;
-}
-
-// 验证反馈表单
-function validateFeedbackForm() {
-    let isValid = true;
-    
-    // 验证姓名
-    const name = $('#feedbackName').val().trim();
-    if (!name) {
-        showValidationError('#feedbackName', $.i18n.prop('validation_required_field') || '此字段为必填项');
-        isValid = false;
-    } else {
-        clearValidationError('#feedbackName');
-    }
-    
-    // 验证建议
-    const suggestion = $('#feedbackSuggestion').val().trim();
-    if (!suggestion) {
-        showValidationError('#feedbackSuggestion', $.i18n.prop('validation_required_field') || '此字段为必填项');
-        isValid = false;
-    } else {
-        clearValidationError('#feedbackSuggestion');
-    }
-    
-    return isValid;
-}
-
-// 显示验证错误
-function showValidationError(selector, message) {
-    const input = $(selector);
-    const validationMessage = input.siblings('.validation-message');
-    
-    input.addClass('error').removeClass('success');
-    validationMessage.text(message).addClass('error').removeClass('success');
-}
-
-// 清除验证错误
-function clearValidationError(selector) {
-    const input = $(selector);
-    const validationMessage = input.siblings('.validation-message');
-    
-    input.removeClass('error').addClass('success');
-    validationMessage.text('').removeClass('error').addClass('success');
-}
-
-// 验证邮箱格式
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-// 提交联系表单到Supabase
-function submitContactForm(formData) {
-    if (!window.supabaseClient) {
-        showAlert($.i18n.prop('supabase_not_initialized') || 'Supabase客户端未初始化', 'error');
-        return;
-    }
-    
-    const submitButton = $('#contactForm button[type="submit"]');
-    const originalText = submitButton.text();
-    
-    // 显示加载状态
-    submitButton.prop('disabled', true)
-                 .addClass('loading')
-                 .text($.i18n.prop('submitting') || '提交中...');
-    
-    // 提交到Supabase
-    window.supabaseClient
-        .from('contact_inquiries')
-        .insert([formData])
-        .then(response => {
-            if (response.error) {
-                console.error('提交失败:', response.error);
-                showAlert($.i18n.prop('submit_error') || '提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com', 'error');
-            } else {
-                console.log('提交成功:', response.data);
-                showAlert($.i18n.prop('submit_success') || '提交成功！我们会尽快与您联系。', 'success');
-                $('#contactForm')[0].reset();
-                clearAllValidationErrors('#contactForm');
-            }
-        })
-        .catch(error => {
-            console.error('提交失败:', error);
-            showAlert($.i18n.prop('network_error') || '网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com', 'error');
-        })
-        .finally(() => {
-            // 恢复按钮状态
-            submitButton.prop('disabled', false)
-                         .removeClass('loading')
-                         .text(originalText);
-        });
-}
-
-// 提交翻译员申请到Supabase
-function submitTranslatorApplication(formData) {
-    if (!window.supabaseClient) {
-        showAlert($.i18n.prop('supabase_not_initialized') || 'Supabase客户端未初始化', 'error');
-        return;
-    }
-    
-    const submitButton = $('#translatorForm button[type="submit"]');
-    const originalText = submitButton.text();
-    
-    // 显示加载状态
-    submitButton.prop('disabled', true)
-                 .addClass('loading')
-                 .text($.i18n.prop('submitting') || '提交中...');
-    
-    // 提交到Supabase
-    window.supabaseClient
-        .from('translator_applications')
-        .insert([formData])
-        .then(response => {
-            if (response.error) {
-                console.error('提交失败:', response.error);
-                showAlert($.i18n.prop('submit_error') || '提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com', 'error');
-            } else {
-                console.log('提交成功:', response.data);
-                showAlert($.i18n.prop('submit_success') || '提交成功！我们会尽快与您联系。', 'success');
-                $('#translatorForm')[0].reset();
-                clearAllValidationErrors('#translatorForm');
-            }
-        })
-        .catch(error => {
-            console.error('提交失败:', error);
-            showAlert($.i18n.prop('network_error') || '网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com', 'error');
-        })
-        .finally(() => {
-            // 恢复按钮状态
-            submitButton.prop('disabled', false)
-                         .removeClass('loading')
-                         .text(originalText);
-        });
-}
-
-// 提交反馈到Supabase
-function submitFeedback(formData) {
-    if (!window.supabaseClient) {
-        showAlert($.i18n.prop('supabase_not_initialized') || 'Supabase客户端未初始化', 'error');
-        return;
-    }
-    
-    const submitButton = $('#feedbackForm button[type="submit"]');
-    const originalText = submitButton.text();
-    
-    // 显示加载状态
-    submitButton.prop('disabled', true)
-                 .addClass('loading')
-                 .text($.i18n.prop('submitting') || '提交中...');
-    
-    // 提交到Supabase
-    window.supabaseClient
-        .from('feedback')
-        .insert([formData])
-        .then(response => {
-            if (response.error) {
-                console.error('提交失败:', response.error);
-                showAlert($.i18n.prop('submit_error') || '提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com', 'error');
-            } else {
-                console.log('提交成功:', response.data);
-                showAlert($.i18n.prop('submit_success') || '提交成功！我们会尽快与您联系。', 'success');
-                $('#feedbackForm')[0].reset();
-                clearAllValidationErrors('#feedbackForm');
-            }
-        })
-        .catch(error => {
-            console.error('提交失败:', error);
-            showAlert($.i18n.prop('network_error') || '网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com', 'error');
-        })
-        .finally(() => {
-            // 恢复按钮状态
-            submitButton.prop('disabled', false)
-                         .removeClass('loading')
-                         .text(originalText);
-        });
-}
-
-// 清除所有验证错误
-function clearAllValidationErrors(formSelector) {
-    $(formSelector + ' .form-control').removeClass('error success');
-    $(formSelector + ' .validation-message').text('').removeClass('error success');
-}
-
-// 显示提示信息
-function showAlert(message, type = 'info') {
-    // 移除现有的提示框
-    $('.custom-alert').remove();
-    
-    // 创建新的提示框
-    const alertClass = type === 'success' ? 'alert-success' : 
-                      type === 'error' ? 'alert-danger' : 'alert-info';
-    
-    const alertHtml = `
-        <div class="custom-alert alert ${alertClass} alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 400px;">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
-    
-    $('body').append(alertHtml);
-    
-    // 自动隐藏提示框
-    setTimeout(() => {
-        $('.custom-alert').fadeOut(500, function() {
-            $(this).remove();
-        });
-    }, 5000);
-}
-
-// 统计事件跟踪
-function trackEvent(category, action, label) {
-    try {
-        // 51LA统计
-        if (typeof LA !== 'undefined' && LA.track) {
-            LA.track(action, {
-                category: category,
-                label: label
-            });
-        }
-        
-        // Google Analytics (如果有)
-        if (typeof gtag !== 'undefined') {
-            gtag('event', action, {
-                event_category: category,
-                event_label: label
-            });
-        }
-    } catch (error) {
-        console.warn('统计跟踪失败:', error);
-    }
-}
-
-// 全局变量和函数导出
+// 全局函数导出
 window.switchLanguage = switchLanguage;
 window.trackEvent = trackEvent;

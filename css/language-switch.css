@@ -1,0 +1,44 @@
+/* 语言切换器样式 */
+.language-switch {
+    margin-left: 15px;
+}
+
+.language-switch .slt_i18n {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.language-switch .slt_i18n:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #ddd;
+}
+
+.language-switch .slt_i18n:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.language-switch .slt_i18n option {
+    background: #333;
+    color: #fff;
+    padding: 5px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .language-switch {
+        margin-left: 10px;
+    }
+    
+    .language-switch .slt_i18n {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+}
