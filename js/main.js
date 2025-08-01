@@ -23,7 +23,138 @@ function loadLanguage(language) {
                     const key = $(this).attr('data-locale');
                     const translation = getTranslation(key, $(this).text());
                     $(this).text(translation);
-                });
+                // 发送邮件通知函数
+async function sendEmailNotification(formData, formType) {
+    try {
+        // 使用Supabase Edge Function发送邮件
+        if (supabaseClient) {
+            const emailData = {
+                to: 'joanne.wan@local-trans.com',
+                subject: formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation',
+                html: generateEmailContent(formData, formType),
+                formData: formData,
+                formType: formType
+            };
+            
+            // 调用Supabase Edge Function发送邮件
+            const { data, error } = await supabaseClient.functions.invoke('send-email', {
+                body: emailData
+            });
+            
+            if (error) {
+                console.warn('Email function error:', error);
+                // 如果Edge Function失败，尝试备用方案
+                await sendEmailBackup(formData, formType);
+            } else {
+                console.log('Email notification sent successfully via Supabase');
+            }
+        } else {
+            // 如果Supabase不可用，使用备用方案
+            await sendEmailBackup(formData, formType);
+        }
+    } catch (error) {
+        console.error('Failed to send email notification:', error);
+        // 尝试备用方案
+        await sendEmailBackup(formData, formType);
+    }
+}
+
+// 备用邮件发送方案
+async function sendEmailBackup(formData, formType) {
+    try {
+        // 创建邮件内容
+        const subject = encodeURIComponent(formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation');
+        const body = encodeURIComponent(generateEmailTextContent(formData, formType));
+        
+        // 使用mailto作为最后的备用方案（在控制台显示信息）
+        const mailtoLink = `mailto:joanne.wan@local-trans.com?subject=${subject}&body=${body}`;
+        
+        console.log('Email backup: mailto link generated');
+        console.log('Email content:', {
+            to: 'joanne.wan@local-trans.com',
+            subject: formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation',
+            content: generateEmailTextContent(formData, formType)
+        });
+        
+        // 在生产环境中，这里可以集成其他邮件服务如SendGrid, Mailgun等
+        
+    } catch (error) {
+        console.error('Backup email method also failed:', error);
+    }
+}
+
+// 生成邮件内容
+function generateEmailContent(formData, formType) {
+    const currentTime = new Date().toLocaleString('zh-CN');
+    
+    if (formType === 'contact') {
+        return `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+                    新的翻译询价
+                </h2>
+                <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                    <h3 style="color: #333; margin-top: 0;">客户信息</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold; width: 100px;">姓名：</td>
+                            <td style="padding: 8px 0;">${formData.name || '未提供'}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold;">邮箱：</td>
+                            <td style="padding: 8px 0;">${formData.email || '未提供'}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold;">电话：</td>
+                            <td style="padding: 8px 0;">${formData.mobile || '未提供'}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold;">公司：</td>
+                            <td style="padding: 8px 0;">${formData.company || '未提供'}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="background-color: #fff; padding: 20px; border: 1px solid #dee2e6; border-radius: 5px;">
+                    <h3 style="color: #333; margin-top: 0;">翻译需求</h3>
+                    <p style="line-height: 1.6; color: #555;">${formData.message || '未提供具体需求'}</p>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background-color: #e9ecef; border-radius: 5px; font-size: 12px; color: #6c757d;">
+                    <p style="margin: 0;">提交时间：${currentTime}</p>
+                    <p style="margin: 5px 0 0 0;">来源：Local-trans Translation 官网</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    return `<p>新的表单提交，请查看详情。</p>`;
+}
+
+// 生成邮件文本内容
+function generateEmailTextContent(formData, formType) {
+    const currentTime = new Date().toLocaleString('zh-CN');
+    
+    if (formType === 'contact') {
+        return `
+新的翻译询价
+
+客户信息：
+姓名：${formData.name || '未提供'}
+邮箱：${formData.email || '未提供'}
+电话：${formData.mobile || '未提供'}
+公司：${formData.company || '未提供'}
+
+翻译需求：
+${formData.message || '未提供具体需求'}
+
+提交时间：${currentTime}
+来源：Local-trans Translation 官网
+        `;
+    }
+    
+    return '新的表单提交，请查看详情。';
+}
+
+});
                 
                 // 更新表单占位符
                 updatePlaceholders();
@@ -193,12 +324,16 @@ async function submitContactForm(formData) {
                     email: formData.email,
                     mobile: formData.mobile,
                     message: formData.message,
+                    company: formData.company || '',
                     created_at: new Date().toISOString()
                 }]);
             
             if (error) {
                 throw error;
             }
+            
+            // 发送邮件通知
+            await sendEmailNotification(formData, 'contact');
             
             showSubmitStatus(submitButton, 'success', getTranslation('contact_submit_success', '咨询提交成功，我们会尽快联系您！'));
             $('#contactForm')[0].reset();
@@ -334,6 +469,11 @@ function trackEvent(eventName, eventData = {}) {
 
 // 文档就绪时初始化
 $(document).ready(function() {
+    // 初始化EmailJS
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init('YOUR_PUBLIC_KEY'); // 需要替换为实际的EmailJS公钥
+    }
+    
     // 初始化语言
     initializeLanguage();
     
