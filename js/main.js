@@ -45,62 +45,37 @@ function loadLanguage(language) {
 // 发送邮件通知函数
 async function sendEmailNotification(formData, formType) {
     try {
-        // 使用Supabase Edge Function发送邮件
-        if (supabaseClient) {
-            const emailData = {
-                to: ['joanne.wan@local-trans.com', '731915449@qq.com'],
-                subject: formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation',
-                html: generateEmailContent(formData, formType),
-                formData: formData,
-                formType: formType
-            };
-            
-            // 调用Supabase Edge Function发送邮件
-            const { data, error } = await supabaseClient.functions.invoke('send-email', {
-                body: emailData
-            });
-            
-            if (error) {
-                console.warn('Email function error:', error);
-                // 如果Edge Function失败，尝试备用方案
-                await sendEmailBackup(formData, formType);
-            } else {
-                console.log('Email notification sent successfully via Supabase');
-            }
+        if (window.emailHandler) {
+            const result = await window.emailHandler.sendNotification(formData, formType);
+            console.log('Email notification sent successfully:', result.method);
+            return result;
         } else {
-            // 如果Supabase不可用，使用备用方案
-            await sendEmailBackup(formData, formType);
+            throw new Error('Email handler not initialized');
         }
     } catch (error) {
         console.error('Failed to send email notification:', error);
-        // 尝试备用方案
-        await sendEmailBackup(formData, formType);
+        // 最后的备用方案
+        await logEmailFallback(formData, formType);
     }
 }
 
-// 备用邮件发送方案
-async function sendEmailBackup(formData, formType) {
-    try {
-        // 创建邮件内容
-        const subject = encodeURIComponent(formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation');
-        const body = encodeURIComponent(generateEmailTextContent(formData, formType));
-        
-        // 使用mailto作为最后的备用方案（在控制台显示信息）
-        const mailtoLink1 = `mailto:joanne.wan@local-trans.com?subject=${subject}&body=${body}`;
-        const mailtoLink2 = `mailto:731915449@qq.com?subject=${subject}&body=${body}`;
-        
-        console.log('Email backup: mailto links generated');
-        console.log('Email content:', {
-            to: ['joanne.wan@local-trans.com', '731915449@qq.com'],
-            subject: formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation',
-            content: generateEmailTextContent(formData, formType)
-        });
-        
-        // 在生产环境中，这里可以集成其他邮件服务如SendGrid, Mailgun等
-        
-    } catch (error) {
-        console.error('Backup email method also failed:', error);
-    }
+// 最后的备用方案
+async function logEmailFallback(formData, formType) {
+    const subject = formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation';
+    const content = generateEmailTextContent(formData, formType);
+    
+    console.log('=== 邮件发送失败，内容记录 ===');
+    console.log('收件人: joanne.wan@local-trans.com, 731915449@qq.com');
+    console.log('主题:', subject);
+    console.log('内容:', content);
+    console.log('=== 邮件内容结束 ===');
+    
+    // 创建mailto链接作为最后手段
+    const mailtoSubject = encodeURIComponent(subject);
+    const mailtoBody = encodeURIComponent(content);
+    const mailtoLink = `mailto:joanne.wan@local-trans.com?cc=731915449@qq.com&subject=${mailtoSubject}&body=${mailtoBody}`;
+    
+    console.log('Mailto链接:', mailtoLink);
 }
 
 // 生成邮件内容
@@ -471,16 +446,19 @@ function trackEvent(eventName, eventData = {}) {
 
 // 文档就绪时初始化
 $(document).ready(function() {
-    // 初始化EmailJS
-    if (typeof emailjs !== 'undefined') {
-        emailjs.init('YOUR_PUBLIC_KEY'); // 需要替换为实际的EmailJS公钥
-    }
-    
     // 初始化语言
     initializeLanguage();
     
     // 初始化Supabase
     initializeSupabase();
+    
+    // 初始化邮件处理模块
+    if (window.emailHandler) {
+        // 等待Supabase初始化完成后再初始化邮件处理
+        setTimeout(() => {
+            window.emailHandler.initialize(supabaseClient);
+        }, 1000);
+    }
     
     // 初始化回到顶部功能
     initBackToTop();

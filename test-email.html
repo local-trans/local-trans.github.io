@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>邮件功能测试 - Local-trans</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .test-methods {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .method-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .method-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .method-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>邮件功能测试</h1>
+        <p>此页面用于测试Local-trans网站的邮件发送功能</p>
+        
+        <form id="testForm">
+            <div class="form-group">
+                <label for="name">姓名:</label>
+                <input type="text" id="name" name="name" value="测试用户" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">邮箱:</label>
+                <input type="email" id="email" name="email" value="test@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">电话:</label>
+                <input type="tel" id="phone" name="phone" value="13800138000">
+            </div>
+            
+            <div class="form-group">
+                <label for="company">公司:</label>
+                <input type="text" id="company" name="company" value="测试公司">
+            </div>
+            
+            <div class="form-group">
+                <label for="message">翻译需求:</label>
+                <textarea id="message" name="message" rows="4" required>这是一个测试邮件，用于验证邮件发送功能是否正常工作。包含中英文翻译需求，预计1000字，需要在3天内完成。</textarea>
+            </div>
+            
+            <button type="submit" id="submitBtn">发送测试邮件</button>
+        </form>
+        
+        <div id="status" class="status"></div>
+        
+        <div class="test-methods">
+            <h3>测试结果:</h3>
+            <div id="methodResults"></div>
+        </div>
+    </div>
+
+    <!-- 引入必要的脚本 -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="js/email-handler.js"></script>
+    
+    <script>
+        // 初始化
+        let supabaseClient = null;
+        let emailHandler = null;
+        
+        // 初始化Supabase
+        function initSupabase() {
+            try {
+                const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
+                
+                supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+                console.log('✅ Supabase初始化成功');
+                return true;
+            } catch (error) {
+                console.error('❌ Supabase初始化失败:', error);
+                return false;
+            }
+        }
+        
+        // 初始化邮件处理器
+        async function initEmailHandler() {
+            if (window.EmailHandler) {
+                emailHandler = new window.EmailHandler();
+                await emailHandler.initialize(supabaseClient);
+                console.log('✅ 邮件处理器初始化成功');
+                return true;
+            } else {
+                console.error('❌ 邮件处理器类未找到');
+                return false;
+            }
+        }
+        
+        // 显示状态
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+        }
+        
+        // 添加方法测试结果
+        function addMethodResult(method, success, message) {
+            const resultsDiv = document.getElementById('methodResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `method-result ${success ? 'method-success' : 'method-error'}`;
+            resultDiv.textContent = `${method}: ${success ? '✅' : '❌'} ${message}`;
+            resultsDiv.appendChild(resultDiv);
+        }
+        
+        // 测试各种邮件发送方法
+        async function testEmailMethods(formData) {
+            const resultsDiv = document.getElementById('methodResults');
+            resultsDiv.innerHTML = '<h4>正在测试各种邮件发送方法...</h4>';
+            
+            // 测试1: Supabase Edge Function
+            try {
+                const result = await emailHandler.sendViaSupabase(formData, 'contact');
+                addMethodResult('Supabase Edge Function', true, '发送成功');
+            } catch (error) {
+                addMethodResult('Supabase Edge Function', false, error.message);
+            }
+            
+            // 测试2: EmailJS (如果配置了)
+            try {
+                const result = await emailHandler.sendViaEmailJS(formData, 'contact');
+                addMethodResult('EmailJS', true, '发送成功');
+            } catch (error) {
+                addMethodResult('EmailJS', false, error.message);
+            }
+            
+            // 测试3: Formspree (如果配置了)
+            try {
+                const result = await emailHandler.sendViaFormspree(formData, 'contact');
+                addMethodResult('Formspree', true, '发送成功');
+            } catch (error) {
+                addMethodResult('Formspree', false, error.message);
+            }
+            
+            // 测试4: 控制台日志
+            try {
+                const result = await emailHandler.logEmailContent(formData, 'contact');
+                addMethodResult('控制台日志', true, '内容已记录到控制台');
+            } catch (error) {
+                addMethodResult('控制台日志', false, error.message);
+            }
+        }
+        
+        // 表单提交处理
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '发送中...';
+            
+            // 获取表单数据
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mobile: document.getElementById('phone').value,
+                company: document.getElementById('company').value,
+                message: document.getElementById('message').value
+            };
+            
+            try {
+                showStatus('info', '正在测试邮件发送功能...');
+                
+                if (emailHandler) {
+                    // 使用邮件处理器发送
+                    const result = await emailHandler.sendNotification(formData, 'contact');
+                    showStatus('success', `邮件发送成功! 使用方法: ${result.method}`);
+                    
+                    // 测试所有方法
+                    await testEmailMethods(formData);
+                } else {
+                    throw new Error('邮件处理器未初始化');
+                }
+                
+            } catch (error) {
+                console.error('测试失败:', error);
+                showStatus('error', `测试失败: ${error.message}`);
+                
+                // 即使失败也测试所有方法
+                await testEmailMethods(formData);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '发送测试邮件';
+            }
+        });
+        
+        // 页面加载时初始化
+        window.addEventListener('load', async function() {
+            console.log('🚀 开始初始化测试页面...');
+            
+            const supabaseOk = initSupabase();
+            if (supabaseOk) {
+                await initEmailHandler();
+            }
+            
+            console.log('✅ 测试页面初始化完成');
+        });
+    </script>
+</body>
+</html>
