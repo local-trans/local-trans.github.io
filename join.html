@@ -1,313 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>Local-trans Translation | Join Us</title>
-    <link rel="shortcut icon" href="img/favicon.png" type="images/x-5b">
-    <!--<title>Document</title> 关键字增加所搜性-->
-    <meta name="description" content="Local-trans, as a professional language service brand, is committed to providing
-                    high-quality translation, interpretation, desktop publishing, software localization, multimedia
-                    translation, AI data annotation and other language related services for enterprises and individuals
-                    in the fields of medicine and medical treatment, manufacturing, finance (digital currency), film and
-                    television, law, software, games and other fields.">
-    <!--移动端<meta name="keywords" content="">-->
-    <meta name="keywords" content="Local-trans,interpretation,localization,translation,language">
-    <!--<meta name="keywords" content="">content="123"给网站关键字增加所搜性-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--做移动端一定要加他.支持手机端的neta标签<meta name="viewport" content="width=device-width, initial-scale=1">-->
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!--为了能更好的显示-->
-    <!--这是为了让网站优先兼容最高版本的ie浏览器 -->
-    <!-- CSS -->
-    <!--bootstrap的css-->
-    <link rel="stylesheet" href="plug/bootstrap-3.2.0-dist/css/bootstrap.min.css">
-    <!--字体css-->
-    <link rel="stylesheet" href="plug/Font-Awesome-4.7.0/css/font-awesome.min.css">
-    <!--自己的css-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-locale="join_page_title">Join Our Translation Team - Local Trans</title>
+    <meta name="description" data-locale="join_page_description" content="Join our professional translation team. We are looking for talented translators with excellent language skills and translation experience.">
+    <meta name="keywords" data-locale="join_page_keywords" content="translation jobs, translator recruitment, language services, professional translation">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/main.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-<!--header头部-->
-<header>
-    <nav class="navbar" role="navigation">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a style="display: block" class="logo" href="index.html">
-                    <img class="logo" src="img/logo-name.png" alt="">
-                    <h1 style="display: contents">乔译翻译</h1>
-                </a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <div style="float: right; padding: 15px 0;">
-                    <select class="slt_i18n">
-                        <option value="en">English</option>
-                        <option value="zh">中文</option>
-                    </select>
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.png" alt="Local Trans" height="40">
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html" data-locale="nav_home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html" data-locale="nav_about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="join.html" data-locale="nav_join">Join Us</a>
+                    </li>
+                </ul>
+                
+                <div class="navbar-nav">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-globe"></i> <span id="currentLang">中文</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="switchLanguage('zh')">中文</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="switchLanguage('en')">English</a></li>
+                        </ul>
+                    </div>
                 </div>
-
-                <ul class="nav navbar-nav navbar-right" style="margin-right: 100px;">
-                    <li><a href="index.html" data-locale="Home"></a></li>
-                    <!--                    <li><a href="profuile.html">公司介绍</a></li>-->
-                    <!--                    <li><a href="products.html">产品展示</a></li>-->
-                    <!--                    <li><a href="news.html">新闻动态</a></li>-->
-                    <li><a class="active" href="join.html" data-locale="Join_Us"></a></li>
-                    <li><a href="about.html" data-locale="Contact_Us"></a></li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
+            </div>
+        </div>
     </nav>
-</header>
-<div class="joinyemian">
-    <div class="join-banner">
-        <div class="banner_img"><img src="img/home/poster2.png" alt=""></div>
-        <ul class="join_sul" style="display:none;">
-            <li><a href="#qiye">企业<br>介绍</a></li>
-            <li><a href="#zhaoq">招商<br>优势</a></li>
-            <li><a href="#jiamen">加盟<br>条件</a></li>
-            <li><a href="#chanqin">产品<br>展示</a></li>
-            <li><a href="#jiaru">加入<br>我们</a></li>
-        </ul>
-    </div>
-    <div class="about_form">
+
+    <!-- Main Content -->
+    <main class="py-5">
         <div class="container">
-            <form action="">
-                <h2 data-locale="Translators_Application"></h2>
-                <div class="hrs"></div>
-                <ul>
-                    <li class="row">
-                        <div class="col-md-6 uname">
-                            <span data-locale="Translator_Name"><b></b> </span>
-                            <input type="text">
-                        </div>
-                        <div class="col-md-6 phone">
-                            <span data-locale="Mobile_Number"><b></b> </span>
-                            <input type="text">
-                        </div>
-                    </li>
-                    <li class="uemil">
-                        <span>Email: <b></b> </span>
-                        <input type="text">
-                    </li>
-                    <li>
-                        <span data-locale="Comments"></span>
-                        <textarea style="resize:none" rows="7" cols="30" class="suggestion"></textarea>
-                    </li>
-                    <li class="resume">
-                        <!--                        <span>Resume: <b></b> </span>-->
-                        <!--                        <input type="file" id="resumeFile">-->
-                        <span style="font-weight: normal;"><lc data-locale="apply_note"></lc> <a
-                                href="mailto:join@local-trans.com">join@local-trans.com</a>.</span>
-                    </li>
-                    <li>
-                        <p style="margin: 20px 0;"><input class="about_form_submit" type="button"
-                                                          data-locale-value="Submit"></p>
-                    </li>
-                </ul>
-            </form>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="form-container">
+                        <h1 class="form-title" data-locale="join_title">加入我们的翻译团队</h1>
+                        <p class="text-center text-muted mb-4" data-locale="join_description">我们一直在寻找有才华的翻译人员加入我们的团队。如果您拥有出色的语言技能和翻译经验，我们很乐意听到您的声音。</p>
+                        
+                        <form id="translatorForm" class="modern-form">
+                            <div class="form-group">
+                                <label for="translatorName" class="form-label" data-locale="translator_name">公司/译员姓名</label>
+                                <input type="text" id="translatorName" name="name" class="form-control" required>
+                                <span class="validation-message"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="translatorMobile" class="form-label" data-locale="mobile">手机号码</label>
+                                <input type="tel" id="translatorMobile" name="mobile" class="form-control" required>
+                                <span class="validation-message"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="translatorComments" class="form-label" data-locale="comments">备注信息</label>
+                                <textarea id="translatorComments" name="comments" class="form-control" rows="5" 
+                                    data-placeholder-zh="请描述您的翻译经验、专业领域、语言对等信息" 
+                                    data-placeholder-en="Please describe your translation experience, expertise areas, language pairs, etc."
+                                    placeholder="请描述您的翻译经验、专业领域、语言对等信息"></textarea>
+                            </div>
+                            
+                            <div class="resume-note">
+                                <div class="note-box">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>
+                                        <strong data-locale="note">注意：</strong> 
+                                        <span data-locale="resume_instruction">您可以将简历发送至</span> 
+                                        <a href="mailto:join@local-trans.com" class="email-link">join@local-trans.com</a>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="submit-group">
+                                <button type="submit" class="btn-submit" data-locale="submit">提交申请</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </main>
 
-<footer>
-    <!--备案号-->
-    <div class="footer-button">
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
         <div class="container">
-            <p>Tel: <a>(+86)13823531229</a> | Email: <a target="_blank" href="mailto:joanne.wan@local-trans.com">joanne.wan@local-trans.com</a>
-            </p>
-            <p>长沙乔译翻译有限公司</p>
-            <!--百度分享-->
-            <!--            <div class="bdsharebuttonbox" style="display:none;">-->
-            <!--                <a href="#" class="bds_more" data-cmd="more"></a>-->
-            <!--                <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>-->
-            <!--                <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a-->
-            <!--                    href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>-->
-            <!--                <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>-->
-            <!--                <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>-->
-            <!--            </div>-->
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 data-locale="footer_contact">联系我们</h5>
+                    <p class="mb-1">
+                        <i class="fas fa-envelope me-2"></i>
+                        <a href="mailto:joanne.wan@local-trans.com" class="text-white-50">joanne.wan@local-trans.com</a>
+                    </p>
+                    <p class="mb-1">
+                        <i class="fas fa-phone me-2"></i>
+                        <span class="text-white-50">+86 138-0013-8000</span>
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0" data-locale="footer_copyright">&copy; 2024 Local Trans. 保留所有权利。</p>
+                </div>
+            </div>
         </div>
-    </div>
-</footer>
-<!--回到顶部-->
-<!--在线客服-->
-<!--qq聊天代码部分begin-->
-<div class="izl-rmenu">
-    <a href="javascript:void(0)" class="btn_top" style="display: block;"></a>
-</div>
-<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=992669453&site=qq&menu=yes" id="udesk-feedback-tab"
-   class="udesk-feedback-tab-left" style="display: none; background-color: black;"></a>
-<!--qq聊天代码部分end-->
+    </footer>
 
-<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-<script src="js/jquery-1.11.1.js"></script>
-<script src="js/jquery.cookie.min.js"></script>
-<script src="js/jquery.i18n.properties.js"></script>
-<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-<script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
-<!-- Supabase JS -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<!-- 51LA 统计分析 -->
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true})</script>
-
-<script src="js/main.js"></script>
-<script>
-    // 安全地初始化统计
-    if (typeof initAnalytics === 'function') {
-        initAnalytics();
-    }
-    //   <!--验证用户名-->
-    var uname = document.querySelector('.uname>input');
-    var namePtxt = document.querySelector('.uname>span>b');
-    uname.onfocus = function () {//获取焦点时
-        namePtxt.innerHTML = "Please input your name!";
-        namePtxt.style.color = 'red';
-    };
-
-    //失去焦点 函数
-    function unameBlur() {
-        if ($(uname).val().trim() !== '') {
-            namePtxt.innerHTML = "√";
-            namePtxt.style.color = '#6cbe1f';
-            uname.style.border = 'solid 1px #6cbe1f';
-            return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
-        } else {
-            namePtxt.innerHTML = "Please input your name!";
-            namePtxt.style.color = 'red';
-            return false;//验证不通过返回 一个false  给最后点击提交时做准备
-        }
-    }
-
-    uname.onblur = function () {//失去焦点时执行函数 键盘松开
-        unameBlur()
-    };
-    //    验证邮箱
-    var uemil = document.querySelector('.uemil>input');
-    var uemilPtxt = document.querySelector('.uemil>span>b');
-    uemil.onfocus = function () {//获取焦点时
-        uemilPtxt.innerHTML = 'Please input your email!';
-        uemilPtxt.style.color = 'red';
-    };
-
-    //    失去焦点 函数
-    function uemilBlur() {
-        var reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-        if (reg.test(uemil.value)) {
-            uemilPtxt.innerHTML = "√";
-            uemilPtxt.style.color = '#6cbe1f';
-            uemil.style.border = 'solid 1px #6cbe1f';
-            return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
-        } else {
-            uemilPtxt.innerHTML = "Invalid email!";
-            uemilPtxt.style.color = 'red';
-            return false;//验证不通过返回 一个false  给最后点击提交时做准备
-        }
-    }
-
-    uemil.onblur = function () {//失去焦点 时
-        uemilBlur();//调用
-    };
-
-    //验证手机号
-    var phone = document.querySelector('.phone>input');
-    var phonePtxt = document.querySelector('.phone>span>b');
-    phone.onfocus = function () {
-        phonePtxt.innerHTML = 'Please input your mobile number!';
-        phonePtxt.style.color = 'red';
-    };
-
-    function phoneBlur() {
-        var reg = /^[+]?\d+$/;
-        if (reg.test(phone.value)) {
-            phonePtxt.innerHTML = "√";
-            phonePtxt.style.color = '#6cbe1f';
-            phone.style.border = 'solid 1px #6cbe1f';
-            return true;//验证通过返回 一个true  给最后点击提交时做准备  最后都返回true（通过）才通过
-        } else {
-            phonePtxt.innerHTML = "Invalid mobile number!";
-            phonePtxt.style.color = 'red';
-            return false;//验证不通过返回 一个false  给最后点击提交时做准备
-        }
-    }
-
-    phone.onblur = function () {
-        phoneBlur();
-    };
-
-    // var resumeFile;
-    // let bFile;
-    // $('#resumeFile').change(function (e) {
-    //     resumeFile = e.currentTarget.files[0];
-    //     if (resumeFile === undefined) return;
-    //
-    //     console.log('--> ' + resumeFile.name);
-    //     bFile = Bmob.File(resumeFile.name, resumeFile);
-    //     bFile.save().then(function (obj) { // TODO 没有回调
-    //         console.log('O--> ' + JSON.stringify(obj));
-    //     }, function (error) {
-    //         console.log('E--> ' + JSON.stringify(error));
-    //     });
-    // });
-
-    $('.about_form_submit').click(async function () {
-        if (!unameBlur() || !phoneBlur() || !uemilBlur()) {
-            alert("Oops! Please input the information above.");
-        } else {
-            try {
-                // 检查Supabase是否可用
-                if (!window.supabaseClient) {
-                    // 初始化Supabase客户端
-                    const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
-                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
-                    window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-                }
-
-                const applicationData = {
-                    name: $(uname).val().trim(),
-                    email: $(uemil).val().trim(),
-                    phone: $(phone).val().trim(),
-                    comments: $('.suggestion').val().trim(),
-                    ip: globalInfo.ip || '',
-                    ext: JSON.stringify(globalInfo || {}),
-                    created_at: new Date().toISOString()
-                };
-
-                const { data, error } = await window.supabaseClient
-                    .from('translator_applications')
-                    .insert([applicationData]);
-
-                if (error) {
-                    console.error('提交失败:', error);
-                    alert('提交失败，请稍后重试或直接联系我们：join@local-trans.com');
-                    if (typeof trackEvent === 'function') {
-                        trackEvent('func_apply', {'result': error.message});
-                    }
-                } else {
-                    console.log('Submit successfully, ' + JSON.stringify(data));
-                    alert('Apply success!');
-                    if (typeof trackEvent === 'function') {
-                        trackEvent('func_apply', {'result': 'success'});
-                    }
-                    location.reload();
-                }
-            } catch (err) {
-                console.error('网络错误:', err);
-                alert('网络错误，请检查网络连接后重试，或直接联系我们：join@local-trans.com');
-                if (typeof trackEvent === 'function') {
-                    trackEvent('func_apply', {'result': err.message});
-                }
-            }
-        }
-    });
-</script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-i18n-properties@1.2.7/jquery.i18n.properties.min.js"></script>
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+    <script>LA.init({id:"JtVbUCXDkKhW8SaF",ck:"JtVbUCXDkKhW8SaF",autoTrack:true,hashMode:true})</script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 初始化 Supabase 客户端
+        const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
+    
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
 </body>
 </html>

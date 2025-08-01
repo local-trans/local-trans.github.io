@@ -281,52 +281,52 @@
         <!-- 联系表单 -->
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <div class="contact-form">
-                    <h3 class="text-center" style="color: #007bff; margin-bottom: 30px;">
-                        <span data-locale="contact_form_title">获取专业翻译报价</span>
-                    </h3>
-                    <form id="contact-form">
-                        <div class="row">
-                            <div class="col-md-6">
+                <div class="contact-form-container">
+                    <h2 class="contact-form-title" data-locale="contact_title">获取专业翻译报价</h2>
+                    <form id="contactForm" class="modern-form">
+                        <div class="form-row">
+                            <div class="form-col">
                                 <div class="form-group">
-                                    <label data-locale="contact_name">姓名 *</label>
-                                    <input type="text" class="form-control" id="contact-name" required>
+                                    <label for="name" class="form-label" data-locale="name">姓名</label>
+                                    <input type="text" id="name" name="name" class="form-control" required>
+                                    <span class="validation-message"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="form-col">
                                 <div class="form-group">
-                                    <label data-locale="contact_email">邮箱 *</label>
-                                    <input type="email" class="form-control" id="contact-email" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label data-locale="contact_phone">电话</label>
-                                    <input type="tel" class="form-control" id="contact-phone">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label data-locale="contact_company">公司</label>
-                                    <input type="text" class="form-control" id="contact-company">
+                                    <label for="email" class="form-label" data-locale="email">邮箱</label>
+                                    <input type="email" id="email" name="email" class="form-control" required>
+                                    <span class="validation-message"></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label data-locale="contact_message">翻译需求描述 *</label>
-                            <textarea class="form-control" id="contact-message" rows="4" required placeholder="请描述您的翻译需求，包括语言对、文档类型、字数、交付时间等"></textarea>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="phone" class="form-label" data-locale="phone">电话</label>
+                                    <input type="tel" id="phone" name="phone" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="company" class="form-label" data-locale="company">公司</label>
+                                    <input type="text" id="company" name="company" class="form-control">
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <span data-locale="contact_submit">提交咨询</span>
-                            </button>
+                        <div class="form-group textarea-group">
+                            <label for="message" class="form-label" data-locale="translation_requirements">翻译需求</label>
+                            <textarea id="message" name="message" class="form-control" rows="5" required 
+                                data-placeholder-zh="请描述您的翻译需求，包括语言对、文档类型、字数、交付时间等" 
+                                data-placeholder-en="Please describe your translation requirements, including language pairs, document types, word count, delivery time, etc."
+                                placeholder="请描述您的翻译需求，包括语言对、文档类型、字数、交付时间等"></textarea>
+                            <span class="validation-message"></span>
+                        </div>
+                        <div class="submit-group">
+                            <button type="submit" class="btn-submit" data-locale="submit_inquiry">提交询价</button>
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
     </div>
 </div>
 <footer>

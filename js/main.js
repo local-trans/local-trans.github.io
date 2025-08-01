@@ -1,268 +1,411 @@
-const debugMode = true;
-var globalInfo = {};
+$(document).ready(function() {
+    // 初始化多语言
+    initializeLanguage();
+    
+    // 联系表单提交处理
+    $('#contactForm').submit(function(e) {
+        e.preventDefault();
+        
+        // 验证表单
+        if (!validateContactForm()) {
+            return;
+        }
+        
+        const formData = {
+            name: $('#name').val().trim(),
+            email: $('#email').val().trim(),
+            phone: $('#phone').val().trim(),
+            company: $('#company').val().trim(),
+            message: $('#message').val().trim(),
+            language: getCurrentLanguage()
+        };
+        
+        submitContactForm(formData);
+    });
+    
+    // 翻译员申请表单提交处理
+    $('#translatorForm').submit(function(e) {
+        e.preventDefault();
+        
+        // 验证表单
+        if (!validateTranslatorForm()) {
+            return;
+        }
+        
+        const formData = {
+            name: $('#translatorName').val().trim(),
+            mobile: $('#translatorMobile').val().trim(),
+            comments: $('#translatorComments').val().trim()
+        };
+        
+        submitTranslatorApplication(formData);
+    });
+    
+    // 反馈表单提交处理
+    $('#feedbackForm').submit(function(e) {
+        e.preventDefault();
+        
+        // 验证表单
+        if (!validateFeedbackForm()) {
+            return;
+        }
+        
+        const formData = {
+            name: $('#feedbackName').val().trim(),
+            mobile: $('#feedbackMobile').val().trim(),
+            email: $('#feedbackEmail').val().trim(),
+            suggestion: $('#feedbackSuggestion').val().trim()
+        };
+        
+        submitFeedback(formData);
+    });
+});
 
-// Supabase 配置
-const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
-
-// 初始化Supabase客户端
-let supabaseClient = null;
-function initSupabase() {
-    if (typeof supabase !== 'undefined' && supabase.createClient) {
-        supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-        console.log('Supabase客户端初始化成功');
-    } else {
-        console.warn('Supabase库未加载，联系表单功能将不可用');
-    }
+// 多语言初始化
+function initializeLanguage() {
+    const savedLanguage = localStorage.getItem('language') || 'zh';
+    loadLanguage(savedLanguage);
+    updateLanguageDisplay(savedLanguage);
 }
 
-// 支持多语言
-function loadProperties(lang) {
-    $('.slt_i18n').val(lang);
+// 加载语言
+function loadLanguage(language) {
     $.i18n.properties({
         name: 'strings',
         path: 'i18n/',
         mode: 'map',
-        language: lang,
+        language: language,
         callback: function () {
-            $("[data-locale]").each(function () {
-                $(this).html($.i18n.prop($(this).data("locale")));
+            // 更新所有带有 data-locale 属性的元素
+            $('[data-locale]').each(function () {
+                var key = $(this).data('locale');
+                if ($.i18n.prop(key)) {
+                    $(this).text($.i18n.prop(key));
+                }
             });
-            $("[data-locale-value]").each(function () {
-                $(this).attr('value', $.i18n.prop($(this).data("locale-value")));
+            
+            // 更新placeholder
+            $('[data-placeholder-zh], [data-placeholder-en]').each(function() {
+                const placeholderKey = language === 'zh' ? 'data-placeholder-zh' : 'data-placeholder-en';
+                const placeholder = $(this).attr(placeholderKey);
+                if (placeholder) {
+                    $(this).attr('placeholder', placeholder);
+                }
             });
         }
     });
 }
 
-// 页面加载完成后执行
-$(document).ready(function () {
-    // 初始化Supabase
-    initSupabase();
+// 切换语言
+function switchLanguage(language) {
+    localStorage.setItem('language', language);
+    loadLanguage(language);
+    updateLanguageDisplay(language);
+}
+
+// 更新语言显示
+function updateLanguageDisplay(language) {
+    const langText = language === 'zh' ? '中文' : 'English';
+    $('#currentLang').text(langText);
+}
+
+// 获取当前语言
+function getCurrentLanguage() {
+    return localStorage.getItem('language') || 'zh';
+}
+
+// 验证联系表单
+function validateContactForm() {
+    let isValid = true;
     
-    // 初始化语言
-    var lang = getUrlParam('lang') || $.cookie('lang') || 'zh';
-    loadProperties(lang);
+    // 验证姓名
+    const name = $('#name').val().trim();
+    if (!name) {
+        showValidationError('#name', $.i18n.prop('validation_required_field') || '此字段为必填项');
+        isValid = false;
+    } else {
+        clearValidationError('#name');
+    }
     
-    // 语言切换事件
-    $('.slt_i18n').change(function () {
-        var selectedLang = $(this).val();
-        $.cookie('lang', selectedLang, { expires: 365, path: '/' });
-        loadProperties(selectedLang);
-        
-        // 更新URL参数
-        var url = new URL(window.location);
-        url.searchParams.set('lang', selectedLang);
-        window.history.replaceState({}, '', url);
-    });
+    // 验证邮箱
+    const email = $('#email').val().trim();
+    if (!email) {
+        showValidationError('#email', $.i18n.prop('validation_required_field') || '此字段为必填项');
+        isValid = false;
+    } else if (!isValidEmail(email)) {
+        showValidationError('#email', $.i18n.prop('validation_invalid_email') || '请输入有效的邮箱地址');
+        isValid = false;
+    } else {
+        clearValidationError('#email');
+    }
+    
+    // 验证翻译需求
+    const message = $('#message').val().trim();
+    if (!message) {
+        showValidationError('#message', $.i18n.prop('validation_fill_required') || '请填写翻译需求');
+        isValid = false;
+    } else {
+        clearValidationError('#message');
+    }
+    
+    return isValid;
+}
 
-    // 联系表单提交处理
-    $('#contact-form').submit(function(e) {
-        e.preventDefault();
-        
-        var formData = {
-            name: $('#contact-name').val(),
-            email: $('#contact-email').val(),
-            phone: $('#contact-phone').val(),
-            company: $('#contact-company').val(),
-            message: $('#contact-message').val(),
-            created_at: new Date().toISOString(),
-            language: $('.slt_i18n').val()
-        };
+// 验证翻译员申请表单
+function validateTranslatorForm() {
+    let isValid = true;
+    
+    // 验证姓名
+    const name = $('#translatorName').val().trim();
+    if (!name) {
+        showValidationError('#translatorName', $.i18n.prop('validation_required_field') || '此字段为必填项');
+        isValid = false;
+    } else {
+        clearValidationError('#translatorName');
+    }
+    
+    // 验证手机号
+    const mobile = $('#translatorMobile').val().trim();
+    if (!mobile) {
+        showValidationError('#translatorMobile', $.i18n.prop('validation_required_field') || '此字段为必填项');
+        isValid = false;
+    } else {
+        clearValidationError('#translatorMobile');
+    }
+    
+    return isValid;
+}
 
-        // 表单验证
-        if (!formData.name || !formData.email || !formData.message) {
-            alert('请填写必填字段');
-            return;
-        }
+// 验证反馈表单
+function validateFeedbackForm() {
+    let isValid = true;
+    
+    // 验证姓名
+    const name = $('#feedbackName').val().trim();
+    if (!name) {
+        showValidationError('#feedbackName', $.i18n.prop('validation_required_field') || '此字段为必填项');
+        isValid = false;
+    } else {
+        clearValidationError('#feedbackName');
+    }
+    
+    // 验证建议
+    const suggestion = $('#feedbackSuggestion').val().trim();
+    if (!suggestion) {
+        showValidationError('#feedbackSuggestion', $.i18n.prop('validation_required_field') || '此字段为必填项');
+        isValid = false;
+    } else {
+        clearValidationError('#feedbackSuggestion');
+    }
+    
+    return isValid;
+}
 
-        // 提交到Supabase
-        submitContactForm(formData);
-    });
+// 显示验证错误
+function showValidationError(selector, message) {
+    const input = $(selector);
+    const validationMessage = input.siblings('.validation-message');
+    
+    input.addClass('error').removeClass('success');
+    validationMessage.text(message).addClass('error').removeClass('success');
+}
 
-    // 回到顶部按钮
-    $('.btn_top').click(function() {
-        $('html, body').animate({scrollTop: 0}, 800);
-    });
+// 清除验证错误
+function clearValidationError(selector) {
+    const input = $(selector);
+    const validationMessage = input.siblings('.validation-message');
+    
+    input.removeClass('error').addClass('success');
+    validationMessage.text('').removeClass('error').addClass('success');
+}
 
-    // 滚动时显示/隐藏回到顶部按钮
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 300) {
-            $('.btn_top').fadeIn();
-        } else {
-            $('.btn_top').fadeOut();
-        }
-    });
-});
+// 验证邮箱格式
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
 
 // 提交联系表单到Supabase
-async function submitContactForm(formData) {
-    var submitBtn = $('#contact-form button[type="submit"]');
-    var originalText = submitBtn.html();
+function submitContactForm(formData) {
+    if (!window.supabaseClient) {
+        showAlert($.i18n.prop('supabase_not_initialized') || 'Supabase客户端未初始化', 'error');
+        return;
+    }
     
-    try {
-        // 显示加载状态
-        submitBtn.html('<i class="fa fa-spinner fa-spin"></i> 提交中...').prop('disabled', true);
-
-        // 检查Supabase是否可用
-        if (!supabaseClient) {
-            throw new Error('Supabase客户端未初始化');
-        }
-
-        const { data, error } = await supabaseClient
-            .from('contact_inquiries')
-            .insert([formData]);
-
-        if (error) {
-            console.error('提交失败:', error);
-            alert('提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com');
-        } else {
-            alert('提交成功！我们会尽快与您联系。');
-            $('#contact-form')[0].reset();
-            
-            // 跟踪转化事件
-            if (typeof trackEvent === 'function') {
-                trackEvent('contact_form_submit', {
-                    language: formData.language,
-                    has_phone: !!formData.phone,
-                    has_company: !!formData.company
-                });
+    const submitButton = $('#contactForm button[type="submit"]');
+    const originalText = submitButton.text();
+    
+    // 显示加载状态
+    submitButton.prop('disabled', true)
+                 .addClass('loading')
+                 .text($.i18n.prop('submitting') || '提交中...');
+    
+    // 提交到Supabase
+    window.supabaseClient
+        .from('contact_inquiries')
+        .insert([formData])
+        .then(response => {
+            if (response.error) {
+                console.error('提交失败:', response.error);
+                showAlert($.i18n.prop('submit_error') || '提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com', 'error');
+            } else {
+                console.log('提交成功:', response.data);
+                showAlert($.i18n.prop('submit_success') || '提交成功！我们会尽快与您联系。', 'success');
+                $('#contactForm')[0].reset();
+                clearAllValidationErrors('#contactForm');
             }
-        }
-    } catch (err) {
-        console.error('网络错误:', err);
-        alert('网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com');
-    } finally {
-        // 恢复按钮状态
-        submitBtn.html(originalText).prop('disabled', false);
-    }
+        })
+        .catch(error => {
+            console.error('提交失败:', error);
+            showAlert($.i18n.prop('network_error') || '网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com', 'error');
+        })
+        .finally(() => {
+            // 恢复按钮状态
+            submitButton.prop('disabled', false)
+                         .removeClass('loading')
+                         .text(originalText);
+        });
 }
 
-// 获取URL参数
-function getUrlParam(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) return unescape(r[2]);
-    return null;
-}
-
-// 初始化统计分析
-function initAnalytics() {
-    // 页面浏览统计
-    if (typeof clicky !== 'undefined') {
-        clicky.init(101463889);
+// 提交翻译员申请到Supabase
+function submitTranslatorApplication(formData) {
+    if (!window.supabaseClient) {
+        showAlert($.i18n.prop('supabase_not_initialized') || 'Supabase客户端未初始化', 'error');
+        return;
     }
     
-    // 自定义事件跟踪
-    window.trackEvent = function(eventName, properties) {
-        // Clicky 事件跟踪
-        if (typeof clicky !== 'undefined' && clicky.goal) {
-            clicky.goal(eventName, properties);
+    const submitButton = $('#translatorForm button[type="submit"]');
+    const originalText = submitButton.text();
+    
+    // 显示加载状态
+    submitButton.prop('disabled', true)
+                 .addClass('loading')
+                 .text($.i18n.prop('submitting') || '提交中...');
+    
+    // 提交到Supabase
+    window.supabaseClient
+        .from('translator_applications')
+        .insert([formData])
+        .then(response => {
+            if (response.error) {
+                console.error('提交失败:', response.error);
+                showAlert($.i18n.prop('submit_error') || '提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com', 'error');
+            } else {
+                console.log('提交成功:', response.data);
+                showAlert($.i18n.prop('submit_success') || '提交成功！我们会尽快与您联系。', 'success');
+                $('#translatorForm')[0].reset();
+                clearAllValidationErrors('#translatorForm');
+            }
+        })
+        .catch(error => {
+            console.error('提交失败:', error);
+            showAlert($.i18n.prop('network_error') || '网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com', 'error');
+        })
+        .finally(() => {
+            // 恢复按钮状态
+            submitButton.prop('disabled', false)
+                         .removeClass('loading')
+                         .text(originalText);
+        });
+}
+
+// 提交反馈到Supabase
+function submitFeedback(formData) {
+    if (!window.supabaseClient) {
+        showAlert($.i18n.prop('supabase_not_initialized') || 'Supabase客户端未初始化', 'error');
+        return;
+    }
+    
+    const submitButton = $('#feedbackForm button[type="submit"]');
+    const originalText = submitButton.text();
+    
+    // 显示加载状态
+    submitButton.prop('disabled', true)
+                 .addClass('loading')
+                 .text($.i18n.prop('submitting') || '提交中...');
+    
+    // 提交到Supabase
+    window.supabaseClient
+        .from('feedback')
+        .insert([formData])
+        .then(response => {
+            if (response.error) {
+                console.error('提交失败:', response.error);
+                showAlert($.i18n.prop('submit_error') || '提交失败，请稍后重试或直接联系我们：joanne.wan@local-trans.com', 'error');
+            } else {
+                console.log('提交成功:', response.data);
+                showAlert($.i18n.prop('submit_success') || '提交成功！我们会尽快与您联系。', 'success');
+                $('#feedbackForm')[0].reset();
+                clearAllValidationErrors('#feedbackForm');
+            }
+        })
+        .catch(error => {
+            console.error('提交失败:', error);
+            showAlert($.i18n.prop('network_error') || '网络错误，请检查网络连接后重试，或直接联系我们：joanne.wan@local-trans.com', 'error');
+        })
+        .finally(() => {
+            // 恢复按钮状态
+            submitButton.prop('disabled', false)
+                         .removeClass('loading')
+                         .text(originalText);
+        });
+}
+
+// 清除所有验证错误
+function clearAllValidationErrors(formSelector) {
+    $(formSelector + ' .form-control').removeClass('error success');
+    $(formSelector + ' .validation-message').text('').removeClass('error success');
+}
+
+// 显示提示信息
+function showAlert(message, type = 'info') {
+    // 移除现有的提示框
+    $('.custom-alert').remove();
+    
+    // 创建新的提示框
+    const alertClass = type === 'success' ? 'alert-success' : 
+                      type === 'error' ? 'alert-danger' : 'alert-info';
+    
+    const alertHtml = `
+        <div class="custom-alert alert ${alertClass} alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 400px;">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+    
+    $('body').append(alertHtml);
+    
+    // 自动隐藏提示框
+    setTimeout(() => {
+        $('.custom-alert').fadeOut(500, function() {
+            $(this).remove();
+        });
+    }, 5000);
+}
+
+// 统计事件跟踪
+function trackEvent(category, action, label) {
+    try {
+        // 51LA统计
+        if (typeof LA !== 'undefined' && LA.track) {
+            LA.track(action, {
+                category: category,
+                label: label
+            });
         }
         
-        // 控制台日志（开发环境）
-        if (debugMode) {
-            console.log('Event tracked:', eventName, properties);
+        // Google Analytics (如果有)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', action, {
+                event_category: category,
+                event_label: label
+            });
         }
-    };
-
-    // 跟踪页面加载
-    trackEvent('page_view', {
-        page: window.location.pathname,
-        language: $('.slt_i18n').val() || 'zh',
-        referrer: document.referrer
-    });
+    } catch (error) {
+        console.warn('统计跟踪失败:', error);
+    }
 }
 
-// 工具函数
-var utils = {
-    // 防抖函数
-    debounce: function(func, wait) {
-        var timeout;
-        return function executedFunction() {
-            var context = this;
-            var args = arguments;
-            var later = function() {
-                timeout = null;
-                func.apply(context, args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    },
-
-    // 节流函数
-    throttle: function(func, limit) {
-        var inThrottle;
-        return function() {
-            var args = arguments;
-            var context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(function() { inThrottle = false; }, limit);
-            }
-        };
-    },
-
-    // 格式化日期
-    formatDate: function(date) {
-        var d = new Date(date);
-        var year = d.getFullYear();
-        var month = ('0' + (d.getMonth() + 1)).slice(-2);
-        var day = ('0' + d.getDate()).slice(-2);
-        return year + '-' + month + '-' + day;
-    },
-
-    // 验证邮箱格式
-    validateEmail: function(email) {
-        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    },
-
-    // 验证手机号格式
-    validatePhone: function(phone) {
-        var re = /^1[3-9]\d{9}$/;
-        return re.test(phone);
-    }
-};
-
-// 错误处理
-window.onerror = function(msg, url, lineNo, columnNo, error) {
-    console.error('JavaScript错误:', {
-        message: msg,
-        source: url,
-        line: lineNo,
-        column: columnNo,
-        error: error
-    });
-    
-    // 跟踪错误事件
-    if (typeof trackEvent === 'function') {
-        trackEvent('javascript_error', {
-            message: msg,
-            source: url,
-            line: lineNo,
-            column: columnNo
-        });
-    }
-    
-    return false;
-};
-
-// 页面卸载前的清理工作
-$(window).on('beforeunload', function() {
-    // 清理定时器、事件监听器等
-    if (window.performanceTimer) {
-        clearInterval(window.performanceTimer);
-    }
-});
-
-// 导出全局函数供其他脚本使用
-window.LocalTrans = {
-    loadProperties: loadProperties,
-    submitContactForm: submitContactForm,
-    trackEvent: window.trackEvent,
-    utils: utils,
-    supabase: supabaseClient
-};
+// 全局变量和函数导出
+window.switchLanguage = switchLanguage;
+window.trackEvent = trackEvent;
