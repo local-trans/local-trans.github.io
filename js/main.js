@@ -412,7 +412,8 @@ async function submitFeedback(formData) {
                 .from('feedback')
                 .insert([{
                     name: formData.name,
-                    email: formData.email,
+                    mobile: formData.mobile || '',
+                    email: formData.email || '',
                     message: formData.message,
                     created_at: new Date().toISOString()
                 }]);
@@ -497,10 +498,11 @@ $(document).ready(function() {
         e.preventDefault();
         
         const formData = {
-            name: $('#contactName').val().trim(),
-            email: $('#contactEmail').val().trim(),
-            mobile: $('#contactMobile').val().trim(),
-            message: $('#message').val().trim()
+            name: $('#name').val() ? $('#name').val().trim() : '',
+            email: $('#email').val() ? $('#email').val().trim() : '',
+            mobile: $('#phone').val() ? $('#phone').val().trim() : '',
+            company: $('#company').val() ? $('#company').val().trim() : '',
+            message: $('#message').val() ? $('#message').val().trim() : ''
         };
         
         submitContactForm(formData);
@@ -512,9 +514,9 @@ $(document).ready(function() {
         e.preventDefault();
         
         const formData = {
-            name: $('#translatorName').val().trim(),
-            mobile: $('#translatorMobile').val().trim(),
-            comments: $('#translatorComments').val().trim()
+            name: $('#translatorName').val() ? $('#translatorName').val().trim() : '',
+            mobile: $('#translatorMobile').val() ? $('#translatorMobile').val().trim() : '',
+            comments: $('#translatorComments').val() ? $('#translatorComments').val().trim() : ''
         };
         
         submitTranslatorApplication(formData);
@@ -526,9 +528,10 @@ $(document).ready(function() {
         e.preventDefault();
         
         const formData = {
-            name: $('#feedbackName').val().trim(),
-            email: $('#feedbackEmail').val().trim(),
-            message: $('#feedbackMessage').val().trim()
+            name: $('#feedbackName').val() ? $('#feedbackName').val().trim() : '',
+            mobile: $('#feedbackMobile').val() ? $('#feedbackMobile').val().trim() : '',
+            email: $('#feedbackEmail').val() ? $('#feedbackEmail').val().trim() : '',
+            message: $('#feedbackSuggestion').val() ? $('#feedbackSuggestion').val().trim() : ''
         };
         
         submitFeedback(formData);
