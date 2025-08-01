@@ -23,7 +23,25 @@ function loadLanguage(language) {
                     const key = $(this).attr('data-locale');
                     const translation = getTranslation(key, $(this).text());
                     $(this).text(translation);
+                });
                 
+                // 更新表单占位符
+                updatePlaceholders();
+                
+                // 更新语言选择器的值
+                $('.slt_i18n').val(language);
+                
+                console.log('Language loaded successfully:', language);
+            } catch (error) {
+                console.error('Error in language callback:', error);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Failed to load language file:', error);
+        }
+    });
+}
+
 // 发送邮件通知函数
 async function sendEmailNotification(formData, formType) {
     try {
@@ -324,10 +342,10 @@ async function submitContactForm(formData) {
                 .insert([{
                     name: formData.name,
                     email: formData.email,
-                    mobile: formData.mobile,
+                    phone: formData.mobile,
                     message: formData.message,
                     company: formData.company || '',
-                    created_at: new Date().toISOString()
+                    language: currentLanguage
                 }]);
             
             if (error) {
