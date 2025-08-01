@@ -1,0 +1,53 @@
+{
+  "name": "local-trans-website",
+  "version": "1.0.0",
+  "description": "长沙乔译翻译有限公司官方网站 - 专业翻译服务提供商",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000 --open=/index.html",
+    "build": "echo '静态网站无需构建'",
+    "deploy": "echo '部署到GitHub Pages'",
+    "test": "echo '暂无测试'",
+    "lint": "echo '代码检查'",
+    "format": "prettier --write '**/*.{html,css,js,json}'"
+  },
+  "keywords": [
+    "翻译服务",
+    "专业翻译",
+    "医疗翻译",
+    "制造业翻译",
+    "金融翻译",
+    "软件本地化",
+    "口译服务",
+    "长沙翻译公司",
+    "乔译翻译",
+    "Local-trans"
+  ],
+  "author": "长沙乔译翻译有限公司",
+  "license": "MIT",
+  "homepage": "https://local-trans.github.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/local-trans/local-trans.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/local-trans/local-trans.github.io/issues"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "prettier": "^3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11"
+  ],
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}

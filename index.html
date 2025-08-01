@@ -5,13 +5,16 @@
     <title>Local-trans Translation</title>
     <link rel="shortcut icon" href="img/favicon.png" type="images/x-5b">
     <!--<title>Document</title> 关键字增加所搜性-->
-    <meta name="description" content="Local-trans, as a professional language service brand, is committed to providing
-                    high-quality translation, interpretation, desktop publishing, software localization, multimedia
-                    translation, AI data annotation and other language related services for enterprises and individuals
-                    in the fields of medicine and medical treatment, manufacturing, finance (digital currency), film and
-                    television, law, software, games and other fields.">
-    <!--移动端<meta name="keywords" content="">-->
-    <meta name="keywords" content="Local-trans,interpretation,localization,translation,language">
+    <meta name="description" content="长沙乔译翻译有限公司 - 专业提供医疗、制造业、金融、软件、多媒体等领域的高质量翻译、口译、本地化、桌面排版服务。10年行业经验，5000+成功案例，值得信赖的语言服务提供商。">
+    <meta name="keywords" content="长沙翻译公司,专业翻译服务,医疗翻译,制造业翻译,金融翻译,软件本地化,口译服务,桌面排版,多媒体翻译,乔译翻译,Local-trans">
+    <meta name="author" content="长沙乔译翻译有限公司">
+    <meta name="robots" content="index,follow">
+    <meta property="og:title" content="长沙乔译翻译有限公司 - 专业翻译服务提供商">
+    <meta property="og:description" content="专业提供医疗、制造业、金融、软件等领域的高质量翻译、口译、本地化服务。10年行业经验，值得信赖。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://local-trans.github.io">
+    <meta property="og:image" content="https://local-trans.github.io/img/logo-name.png">
+    <link rel="canonical" href="https://local-trans.github.io">
     <!--<meta name="keywords" content="">content="123"给网站关键字增加所搜性-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--做移动端一定要加他.支持手机端的neta标签<meta name="viewport" content="width=device-width, initial-scale=1">-->
@@ -25,6 +28,8 @@
     <link rel="stylesheet" href="plug/Font-Awesome-4.7.0/css/font-awesome.min.css">
     <!--自己的css-->
     <link rel="stylesheet" href="css/main.css">
+    <!--现代化样式-->
+    <link rel="stylesheet" href="css/modern-style.css">
 </head>
 <body>
 <!--header头部-->
@@ -122,11 +127,13 @@
                 <p class="cen" style="display: none"><a>More</a></p>
             </div>
             <div class="col-md-3">
-                <img src="img/home/ceo.png" alt="">
-                <p style="font-size: 18px;font-weight: bold;">Joanne Wan</p>
-                <p data-locale="ceo_manager"></p>
-                <p data-locale="ceo_manage"></p>
-                <p data-locale="ceo_recruit"></p>
+                <div class="ceo-card">
+                    <img src="img/home/ceo.png" alt="CEO Joanne Wan">
+                    <p style="font-size: 18px;font-weight: bold;">Joanne Wan</p>
+                    <p data-locale="ceo_manager"></p>
+                    <p data-locale="ceo_manage"></p>
+                    <p data-locale="ceo_recruit"></p>
+                </div>
             </div>
         </div>
     </div>
@@ -231,31 +238,93 @@
     <div class="container">
         <h2 class="text-center"><a data-locale="what_we_do"></a></h2>
         <div class="row">
-            <div class="col-md-4 ">
-                <h4 class="text-left"><a data-locale="Language_Supported"></a></h4>
-                <p data-locale="Language_Supported_c"></p>
+            <div class="col-md-4">
+                <div class="service-card fade-in-up">
+                    <h4><a data-locale="Language_Supported"></a></h4>
+                    <p data-locale="Language_Supported_c"></p>
+                </div>
             </div>
             <div class="col-md-4">
-                <h4 class="text-left"><a data-locale="Translation_Services"></a></h4>
-                <p data-locale="Translation_Services_c"></p>
+                <div class="service-card fade-in-up">
+                    <h4><a data-locale="Translation_Services"></a></h4>
+                    <p data-locale="Translation_Services_c"></p>
+                </div>
             </div>
             <div class="col-md-4">
-                <h4 class="text-left"><a data-locale="Interpretation_Service"></a></h4>
-                <p data-locale="Interpretation_Service_c"></p>
+                <div class="service-card fade-in-up">
+                    <h4><a data-locale="Interpretation_Service"></a></h4>
+                    <p data-locale="Interpretation_Service_c"></p>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4 ">
-                <h4 class="text-left"><a data-locale="Multimedia_Service"></a></h4>
-                <p data-locale="Multimedia_Service_c"></p>
+            <div class="col-md-4">
+                <div class="service-card fade-in-up">
+                    <h4><a data-locale="Multimedia_Service"></a></h4>
+                    <p data-locale="Multimedia_Service_c"></p>
+                </div>
             </div>
             <div class="col-md-4">
-                <h4 class="text-left"><a data-locale="Language_Localization"></a></h4>
-                <p data-locale="Language_Localization_c"></p>
+                <div class="service-card fade-in-up">
+                    <h4><a data-locale="Language_Localization"></a></h4>
+                    <p data-locale="Language_Localization_c"></p>
+                </div>
             </div>
             <div class="col-md-4">
-                <h4 class="text-left"><a data-locale="VIP_Services"></a></h4>
-                <p data-locale="VIP_Services_c"></p>
+                <div class="service-card fade-in-up">
+                    <h4><a data-locale="VIP_Services"></a></h4>
+                    <p data-locale="VIP_Services_c"></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 联系表单 -->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="contact-form">
+                    <h3 class="text-center" style="color: #007bff; margin-bottom: 30px;">
+                        <span data-locale="contact_form_title">获取专业翻译报价</span>
+                    </h3>
+                    <form id="contact-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label data-locale="contact_name">姓名 *</label>
+                                    <input type="text" class="form-control" id="contact-name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label data-locale="contact_email">邮箱 *</label>
+                                    <input type="email" class="form-control" id="contact-email" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label data-locale="contact_phone">电话</label>
+                                    <input type="tel" class="form-control" id="contact-phone">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label data-locale="contact_company">公司</label>
+                                    <input type="text" class="form-control" id="contact-company">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label data-locale="contact_message">翻译需求描述 *</label>
+                            <textarea class="form-control" id="contact-message" rows="4" required placeholder="请描述您的翻译需求，包括语言对、文档类型、字数、交付时间等"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <span data-locale="contact_submit">提交咨询</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -294,7 +363,8 @@
 <script src="js/jquery.i18n.properties.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="plug/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
-<script src="js/Bmob-2.4.0.min.js"></script>
+<!-- Supabase JS -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <!-- 51LA 统计分析 -->
 <!-- <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script> -->
 
@@ -303,6 +373,7 @@
 <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/101463889ns.gif" /></p></noscript>
 
 <script src="js/main.js"></script>
+<script src="js/animations.js"></script>
 <script>
     initAnalytics();
 </script>

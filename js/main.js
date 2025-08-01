@@ -1,14 +1,19 @@
 const debugMode = true;
 var globalInfo = {};
 
+// Supabase 配置
+const supabaseUrl = 'https://qxyqydsiavnjmdvnfgcn.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eXF5ZHNpYXZuam1kdm5mZ2NuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwMDUyNjksImV4cCI6MjA2OTU4MTI2OX0.bDigwFOPoiXCHGLfTpZ7VXNMAlHEpGCE5iHB8FPI4ZY';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
 // 支持多语言
 function loadProperties(lang) {
     $('.slt_i18n').val(lang);
     $.i18n.properties({
-        name: 'strings',  //资源文件名称 ， 命名格式： 文件名_国家代号.properties
-        path: 'i18n/',    //资源文件路径，注意这里路径是你属性文件的所在文件夹,可以自定义。
-        mode: 'map',     //用 Map 的方式使用资源文件中的值
-        language: lang,  //这就是国家代号 name+language刚好组成属性文件名：strings+zh -> strings_zh.properties
+        name: 'strings',
+        path: 'i18n/',
+        mode: 'map',
+        language: lang,
         callback: function () {
             $("[data-locale]").each(function () {
                 $(this).html($.i18n.prop($(this).data("locale")));
@@ -20,162 +25,226 @@ function loadProperties(lang) {
     });
 }
 
-//首页产品展示的选项卡
-$(function () {
-    // 切换语言
-    $('.slt_i18n').change(function (e) {
-        loadProperties($(this).val());
-        $.cookie('i18n_locale', $(this).val());
+// 页面加载完成后执行
+$(document).ready(function () {
+    // 初始化语言
+    var lang = getUrlParam('lang') || $.cookie('lang') || 'zh';
+    loadProperties(lang);
+    
+    // 语言切换事件
+    $('.slt_i18n').change(function () {
+        var selectedLang = $(this).val();
+        $.cookie('lang', selectedLang, { expires: 365, path: '/' });
+        loadProperties(selectedLang);
+        
+        // 更新URL参数
+        var url = new URL(window.location);
+        url.searchParams.set('lang', selectedLang);
+        window.history.replaceState({}, '', url);
     });
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab.', function (e) {
-        //获取已激活标签名称
-        var activeTab = $(e.target).text();
-        //获取上一个激活标签
-        var previousTab = $(e.relatedTarget).text();
-        $(".active-tab span").html(activeTab);
-        $(".previous-tab span").html(previousTab);
+    // 联系表单提交处理
+    $('#contact-form').submit(function(e) {
+        e.preventDefault();
+        
+        var formData = {
+            name: $('#contact-name').val(),
+            email: $('#contact-email').val(),
+            phone: $('#contact-phone').val(),
+            company: $('#contact-company').val(),
+            message: $('#contact-message').val(),
+            created_at: new Date().toISOString(),
+            language: $('.slt_i18n').val()
+        };
+
+        // 表单验证
+        if (!formData.name || !formData.email || !formData.message) {
+            alert('请填写必填字段');
+            return;
+        }
+
+        // 提交到Supabase
+        submitContactForm(formData);
     });
 
-    /*---------返回顶部----------*/
-    $(".btn_top").hide();
-    $(".btn_top").on("click", function () {
-        $('html, body').animate({scrollTop: 0}, 300);
-        return false;
-    })
-    $(window).bind('scroll resize', function () {
-        if ($(window).scrollTop() <= 300) {
-            $(".btn_top").hide();
+    // 回到顶部按钮
+    $('.btn_top').click(function() {
+        $('html, body').animate({scrollTop: 0}, 800);
+    });
+
+    // 滚动时显示/隐藏回到顶部按钮
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 300) {
+            $('.btn_top').fadeIn();
         } else {
-            $(".btn_top").show();
-        }
-    })
-    /*---------返回顶部 end----------*/
-
-    // 语言
-    // #1 从cookie获取语言，为空则通过接口获取
-    const cLocale = $.cookie('i18n_locale');
-    if (cLocale !== undefined) {
-        loadProperties(cLocale);
-    }
-
-    // 通过IP获取国家码  http://ip-api.com/json (不支持https)  、  http://geolocation-db.com/json/、  https://api.country.is/
-    // {"status":"success","country":"Hong Kong","countryCode":"HK","region":"HCW","regionName":"Central and Western District","city":"Hong Kong","zip":"","lat":22.3193,"lon":114.1693,"timezone":"Asia/Hong_Kong","isp":"xTom Hong Kong Limited","org":"Xtom HKG","as":"AS9312 xTom","query":"103.192.225.78"}
-    $.ajax({
-        url: "https://api.country.is/", success: function (res) {
-            // const result = JSON.parse(res);
-            // globalInfo.countryCode = result.country_code;
-            // globalInfo.ip = result.IPv4;
-            // globalInfo.country = result.country_name;
-            // globalInfo.region = result.state;
-            // globalInfo.city = result.city;
-            // globalInfo.lat = result.latitude;
-            // globalInfo.lon = result.longitude;
-            globalInfo.countryCode = res.country;
-            globalInfo.ip = res.ip;
-
-            if (cLocale === undefined) {
-                $.cookie('i18n_locale', globalInfo.countryCode === 'CN' ? 'zh' : 'en');
-                loadProperties(globalInfo.countryCode === 'CN' ? 'zh' : 'en');
-            }
-        }, error: function () {
-            $.cookie('i18n_locale', 'en');
-            loadProperties('en');
+            $('.btn_top').fadeOut();
         }
     });
 });
-//客服
-var flag = 1;
-$('#rightArrow').click(function () {
-    if (flag == 1) {
-        $("#floatDivBoxs").animate({right: '-175px'}, 300);
-        $(this).animate({right: '-5px'}, 300);
-        $(this).css('background-position', '-50px 0');
-        flag = 0;
-    } else {
-        $("#floatDivBoxs").animate({right: '0'}, 300);
-        $(this).animate({right: '170px'}, 300);
-        $(this).css('background-position', '0px 0');
-        flag = 1;
-    }
-});
-//首页产品详情页img遮罩
-$(".products #myTabContent div a").hover(
-    function () {
-        $(this).find("img").stop().animate({"opacity": "1"}, 700)
-    }, function () {
-        $(this).find("img").stop().animate({"opacity": "0.5"}, 700)
-    }
-);
-$(".join img").hover(
-    function () {
-        $(this).stop().animate({"opacity": "1"}, 700)
-    }, function () {
-        $(this).stop().animate({"opacity": "0.5"}, 700)
-    }
-);
-//回到顶部
-$(window).scroll(function () {//
-    if ($(window).scrollTop() > 100) {//当高度小于100
-        $("#back-to-top").fadeIn(1000);
-    } else {
-        $("#back-to-top").fadeOut(1000);
-    }
-});
-$("#back-to-top").click(function () {
-    $("body").animate({"scrollTop": "0"}, 1500)
-});
-//.Js-products-li.产品介绍收放
 
-//
-//$(".Js-prod-a1").bind("click",function(){
-//    if($(".Js-prod-ul1").hasClass("sss")){
-//        $(".Js-prod-ul1").removeClass("sss").css("display","block")
-//    }else{
-//        $(".Js-prod-ul1").addClass("sss").css("display","none")
-//    }
-//});
-//
-//$(".Js-prod-a2").bind("click",function(){
-//    if($(".Js-prod-ul2").hasClass("sss")){
-//        $(".Js-prod-ul2").removeClass("sss").css("display","block")
-//    }else{
-//        $(".Js-prod-ul2").addClass("sss").css("display","none")
-//    }
-//});
-//
-//$(".Js-prod-a3").bind("click",function(){
-//    if($(".Js-prod-ul3").hasClass("sss")){
-//        $(".Js-prod-ul3").removeClass("sss").css("display","block")
-//    }else{
-//        $(".Js-prod-ul3").addClass("sss").css("display","none")
-//    }
-//});
-//
+// 提交联系表单到Supabase
+async function submitContactForm(formData) {
+    try {
+        // 显示加载状态
+        var submitBtn = $('#contact-form button[type="submit"]');
+        var originalText = submitBtn.html();
+        submitBtn.html('<i class="fa fa-spinner fa-spin"></i> 提交中...').prop('disabled', true);
 
-//筛选
-$(".btn-default").click(function () {//按下事件.筛选.搜索功能
-    var cont = $(".text1").val();
-    $(".col-md-4").hide().filter(":contains(" + cont + ")").show();//缩减:缩减其余的show
-});
+        const { data, error } = await supabase
+            .from('contact_inquiries')
+            .insert([formData]);
 
+        if (error) {
+            console.error('提交失败:', error);
+            alert('提交失败，请稍后重试或直接联系我们');
+        } else {
+            alert('提交成功！我们会尽快与您联系。');
+            $('#contact-form')[0].reset();
+            
+            // 跟踪转化事件
+            if (typeof trackEvent === 'function') {
+                trackEvent('contact_form_submit', {
+                    language: formData.language,
+                    has_phone: !!formData.phone,
+                    has_company: !!formData.company
+                });
+            }
+        }
+    } catch (err) {
+        console.error('网络错误:', err);
+        alert('网络错误，请检查网络连接后重试');
+    } finally {
+        // 恢复按钮状态
+        var submitBtn = $('#contact-form button[type="submit"]');
+        submitBtn.html(originalText).prop('disabled', false);
+    }
+}
+
+// 获取URL参数
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+
+// 初始化统计分析
 function initAnalytics() {
-    try {
-        if (!debugMode) {
-            LA.init({id: "JtVbUCXDkKhW8SaF", ck: "JtVbUCXDkKhW8SaF", autoTrack: true, hashMode: true});
-        }
-    } catch (e) {
-        console.log(e.message);
+    // 页面浏览统计
+    if (typeof clicky !== 'undefined') {
+        clicky.init(101463889);
     }
+    
+    // 自定义事件跟踪
+    window.trackEvent = function(eventName, properties) {
+        // Clicky 事件跟踪
+        if (typeof clicky !== 'undefined' && clicky.goal) {
+            clicky.goal(eventName, properties);
+        }
+        
+        // 控制台日志（开发环境）
+        if (debugMode) {
+            console.log('Event tracked:', eventName, properties);
+        }
+    };
+
+    // 跟踪页面加载
+    trackEvent('page_view', {
+        page: window.location.pathname,
+        language: $('.slt_i18n').val() || 'zh',
+        referrer: document.referrer
+    });
 }
 
-function trackEvent(eventName, params) {
-    try {
-        if (!debugMode) {
-            LA.track(eventName, params);
-        }
-    } catch (e) {
-        console.log(e.message);
-    }
-}
+// 工具函数
+var utils = {
+    // 防抖函数
+    debounce: function(func, wait) {
+        var timeout;
+        return function executedFunction() {
+            var context = this;
+            var args = arguments;
+            var later = function() {
+                timeout = null;
+                func.apply(context, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
 
+    // 节流函数
+    throttle: function(func, limit) {
+        var inThrottle;
+        return function() {
+            var args = arguments;
+            var context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(function() { inThrottle = false; }, limit);
+            }
+        };
+    },
+
+    // 格式化日期
+    formatDate: function(date) {
+        var d = new Date(date);
+        var year = d.getFullYear();
+        var month = ('0' + (d.getMonth() + 1)).slice(-2);
+        var day = ('0' + d.getDate()).slice(-2);
+        return year + '-' + month + '-' + day;
+    },
+
+    // 验证邮箱格式
+    validateEmail: function(email) {
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    },
+
+    // 验证手机号格式
+    validatePhone: function(phone) {
+        var re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    }
+};
+
+// 错误处理
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+    console.error('JavaScript错误:', {
+        message: msg,
+        source: url,
+        line: lineNo,
+        column: columnNo,
+        error: error
+    });
+    
+    // 跟踪错误事件
+    if (typeof trackEvent === 'function') {
+        trackEvent('javascript_error', {
+            message: msg,
+            source: url,
+            line: lineNo,
+            column: columnNo
+        });
+    }
+    
+    return false;
+};
+
+// 页面卸载前的清理工作
+$(window).on('beforeunload', function() {
+    // 清理定时器、事件监听器等
+    if (window.performanceTimer) {
+        clearInterval(window.performanceTimer);
+    }
+});
+
+// 导出全局函数供其他脚本使用
+window.LocalTrans = {
+    loadProperties: loadProperties,
+    submitContactForm: submitContactForm,
+    trackEvent: window.trackEvent,
+    utils: utils,
+    supabase: supabase
+};

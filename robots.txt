@@ -1,4 +1,24 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.local-trans.com/sitemap.xml
+# 主要页面
+Allow: /index.html
+Allow: /about.html
+Allow: /join.html
+Allow: /products.html
+Allow: /news.html
+
+# 静态资源
+Allow: /css/
+Allow: /js/
+Allow: /img/
+Allow: /i18n/
+
+# 不允许抓取的文件
+Disallow: /*.DS_Store
+
+# 站点地图
+Sitemap: https://local-trans.github.io/sitemap.xml
+
+# 爬虫延迟（可选）
+Crawl-delay: 1
