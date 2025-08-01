@@ -174,25 +174,6 @@ ${formData.message || '未提供具体需求'}
     return '新的表单提交，请查看详情。';
 }
 
-});
-                
-                // 更新表单占位符
-                updatePlaceholders();
-                
-                // 更新语言选择器的值
-                $('.slt_i18n').val(language);
-                
-                console.log('Language loaded successfully:', language);
-            } catch (error) {
-                console.error('Error in language callback:', error);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Failed to load language file:', error);
-        }
-    });
-}
-
 // 安全获取翻译文本的函数
 function getTranslation(key, fallback) {
     try {
