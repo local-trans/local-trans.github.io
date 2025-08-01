@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i18n测试页面</title>
+    <script src="js/jquery-1.11.1.js"></script>
+    <script src="js/jquery.i18n.properties.js"></script>
+</head>
+<body>
+    <h1>jQuery i18n 测试页面</h1>
+    
+    <div>
+        <label>选择语言：</label>
+        <select id="languageSelect">
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h2>测试文本：</h2>
+        <p data-locale="Home">首页</p>
+        <p data-locale="profile_0">乔译翻译简介</p>
+        <p data-locale="contact_title">获取专业翻译报价</p>
+        <p data-locale="name">姓名</p>
+        <p data-locale="email">邮箱</p>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h2>调试信息：</h2>
+        <div id="debugInfo"></div>
+    </div>
+
+    <script>
+        let currentLanguage = 'zh';
+        
+        function loadLanguage(language) {
+            console.log('Loading language:', language);
+            $('#debugInfo').append('<p>正在加载语言: ' + language + '</p>');
+            
+            $.i18n.properties({
+                name: 'strings',
+                path: 'i18n/',
+                mode: 'both',
+                language: language,
+                callback: function() {
+                    console.log('Language loaded successfully:', language);
+                    $('#debugInfo').append('<p>语言加载成功: ' + language + '</p>');
+                    
+                    // 更新所有带有 data-locale 属性的元素
+                    $('[data-locale]').each(function() {
+                        const key = $(this).attr('data-locale');
+                        const translation = $.i18n.prop(key);
+                        console.log('Key:', key, 'Translation:', translation);
+                        $('#debugInfo').append('<p>键: ' + key + ' -> 翻译: ' + translation + '</p>');
+                        $(this).text(translation || key);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to load language file:', error);
+                    $('#debugInfo').append('<p style="color:red;">语言文件加载失败: ' + error + '</p>');
+                }
+            });
+        }
+        
+        $(document).ready(function() {
+            console.log('Document ready');
+            $('#debugInfo').append('<p>文档就绪</p>');
+            
+            // 初始化语言
+            loadLanguage(currentLanguage);
+            
+            // 语言切换
+            $('#languageSelect').change(function() {
+                currentLanguage = $(this).val();
+                loadLanguage(currentLanguage);
+            });
+        });
+    </script>
+</body>
+</html>

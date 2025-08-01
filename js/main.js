@@ -23,13 +23,14 @@ function loadLanguage(language) {
                     const key = $(this).attr('data-locale');
                     const translation = getTranslation(key, $(this).text());
                     $(this).text(translation);
-                // 发送邮件通知函数
+                
+// 发送邮件通知函数
 async function sendEmailNotification(formData, formType) {
     try {
         // 使用Supabase Edge Function发送邮件
         if (supabaseClient) {
             const emailData = {
-                to: 'joanne.wan@local-trans.com',
+                to: ['joanne.wan@local-trans.com', '731915449@qq.com'],
                 subject: formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation',
                 html: generateEmailContent(formData, formType),
                 formData: formData,
@@ -67,11 +68,12 @@ async function sendEmailBackup(formData, formType) {
         const body = encodeURIComponent(generateEmailTextContent(formData, formType));
         
         // 使用mailto作为最后的备用方案（在控制台显示信息）
-        const mailtoLink = `mailto:joanne.wan@local-trans.com?subject=${subject}&body=${body}`;
+        const mailtoLink1 = `mailto:joanne.wan@local-trans.com?subject=${subject}&body=${body}`;
+        const mailtoLink2 = `mailto:731915449@qq.com?subject=${subject}&body=${body}`;
         
-        console.log('Email backup: mailto link generated');
+        console.log('Email backup: mailto links generated');
         console.log('Email content:', {
-            to: 'joanne.wan@local-trans.com',
+            to: ['joanne.wan@local-trans.com', '731915449@qq.com'],
             subject: formType === 'contact' ? '新的翻译询价 - Local-trans Translation' : '新的申请 - Local-trans Translation',
             content: generateEmailTextContent(formData, formType)
         });
